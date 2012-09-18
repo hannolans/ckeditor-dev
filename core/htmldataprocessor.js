@@ -239,11 +239,8 @@
 	var tableOrder = [ 'caption', 'colgroup', 'col', 'thead', 'tfoot', 'tbody' ];
 
 	// Find out the list of block-like tags that can contain <br>.
-	var blockLikeTags = CKEDITOR.tools.extend( {}, dtd.$block, dtd.$listItem, dtd.$tableContent );
-	for ( var i in blockLikeTags ) {
-		if ( !( 'br' in dtd[ i ] ) )
-			delete blockLikeTags[ i ];
-	}
+	var blockLikeTags = CKEDITOR.dtd.$textBlock;
+
 	// We just avoid filler in <pre> right now.
 	// TODO: Support filler for <pre>, line break is also occupy line height.
 	delete blockLikeTags.pre;
@@ -252,7 +249,10 @@
 		attributeNames: [
 			// Event attributes (onXYZ) must not be directly set. They can become
 			// active in the editing area (IE|WebKit).
-			[ ( /^on/ ), 'data-cke-pa-on' ]
+			[ ( /^on/ ), 'data-cke-pa-on' ],
+			// Attribute used only by the parser.
+			[ ( /^data-cke-inline/ ), '' ]
+
 		]
 	};
 

@@ -126,7 +126,9 @@
 					walkerRange.selectNodeContents( nextBlock );
 					var walker = new CKEDITOR.dom.walker( walkerRange );
 					walker.evaluator = function( node ) {
-						return !( bookmark( node ) || whitespaces( node ) || node.type == CKEDITOR.NODE_ELEMENT && node.getName() in CKEDITOR.dtd.$inline && !( node.getName() in CKEDITOR.dtd.$empty ) );
+						return !( bookmark( node ) || whitespaces( node ) ||
+											node.type == CKEDITOR.NODE_ELEMENT &&
+											CKEDITOR.dtd.isRemoveEmpty( node ) );
 					};
 
 					node = walker.next();
@@ -177,7 +179,7 @@
 						if ( element.equals( elementPath.block ) || element.equals( elementPath.blockLimit ) )
 							break;
 
-						if ( CKEDITOR.dtd.$removeEmpty[ element.getName() ] ) {
+						if ( CKEDITOR.dtd.isRemoveEmpty( element ) ) {
 							element = element.clone();
 							newBlock.moveChildren( element );
 							newBlock.append( element );

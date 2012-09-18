@@ -374,7 +374,11 @@ CKEDITOR.dom.range = function( root ) {
 			// Reject any text node unless it's being bookmark
 			// OR it's spaces.
 			// Reject any element unless it's being invisible empty. (#3883)
-			return !checkStart && isBogus( node ) || ( node.type == CKEDITOR.NODE_TEXT ? !CKEDITOR.tools.trim( node.getText() ) || !!node.getParent().data( 'cke-bookmark' ) : node.getName() in CKEDITOR.dtd.$removeEmpty );
+			return !checkStart && isBogus( node ) ||
+						 ( node.type == CKEDITOR.NODE_TEXT ?
+							!CKEDITOR.tools.trim( node.getText() ) ||
+							!!node.getParent().data( 'cke-bookmark' ) :
+							CKEDITOR.dtd.isRemoveEmpty( node ) );
 		};
 	}
 
@@ -1005,7 +1009,7 @@ CKEDITOR.dom.range = function( root ) {
 									// We'll accept it only if we need
 									// whitespace, and this is an inline
 									// element with whitespace only.
-									if ( needsWhiteSpace && CKEDITOR.dtd.$removeEmpty[ sibling.getName() ] ) {
+									if ( needsWhiteSpace && CKEDITOR.dtd.isRemoveEmpty( sibling ) ) {
 										// It must contains spaces and inline elements only.
 
 										siblingText = sibling.getText();
@@ -1015,7 +1019,7 @@ CKEDITOR.dom.range = function( root ) {
 										else {
 											var allChildren = sibling.$.getElementsByTagName( '*' );
 											for ( var i = 0, child; child = allChildren[ i++ ]; ) {
-												if ( !CKEDITOR.dtd.$removeEmpty[ child.nodeName.toLowerCase() ] ) {
+												if ( !CKEDITOR.dtd.isRemoveEmpty( child ) ) {
 													sibling = null;
 													break;
 												}
@@ -1141,7 +1145,7 @@ CKEDITOR.dom.range = function( root ) {
 									// We'll accept it only if we need
 									// whitespace, and this is an inline
 									// element with whitespace only.
-									if ( needsWhiteSpace && CKEDITOR.dtd.$removeEmpty[ sibling.getName() ] ) {
+									if ( needsWhiteSpace && CKEDITOR.dtd.isRemoveEmpty( sibling ) ) {
 										// It must contains spaces and inline elements only.
 
 										siblingText = sibling.getText();
@@ -1151,7 +1155,7 @@ CKEDITOR.dom.range = function( root ) {
 										else {
 											allChildren = sibling.$.getElementsByTagName( '*' );
 											for ( i = 0; child = allChildren[ i++ ]; ) {
-												if ( !CKEDITOR.dtd.$removeEmpty[ child.nodeName.toLowerCase() ] ) {
+												if ( !CKEDITOR.dtd.isRemoveEmpty( child ) ) {
 													sibling = null;
 													break;
 												}
@@ -1457,7 +1461,7 @@ CKEDITOR.dom.range = function( root ) {
 			// ignore it for now.
 
 			// Fixing invalid range start inside dtd empty elements.
-			if ( startNode.type == CKEDITOR.NODE_ELEMENT && CKEDITOR.dtd.$empty[ startNode.getName() ] )
+			if ( startNode.type == CKEDITOR.NODE_ELEMENT && startNode.is( CKEDITOR.dtd.$empty ) )
 				startOffset = startNode.getIndex(), startNode = startNode.getParent();
 
 			this.startContainer = startNode;
@@ -1486,7 +1490,7 @@ CKEDITOR.dom.range = function( root ) {
 			// it for now.
 
 			// Fixing invalid range end inside dtd empty elements.
-			if ( endNode.type == CKEDITOR.NODE_ELEMENT && CKEDITOR.dtd.$empty[ endNode.getName() ] )
+			if ( endNode.type == CKEDITOR.NODE_ELEMENT && endNode.is( CKEDITOR.dtd.$empty ) )
 				endOffset = endNode.getIndex() + 1, endNode = endNode.getParent();
 
 			this.endContainer = endNode;

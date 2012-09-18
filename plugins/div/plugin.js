@@ -23,7 +23,7 @@
 				contextSensitive: true,
 				refresh: function( editor, path ) {
 					var context = editor.config.div_wrapTable ? path.root : path.blockLimit;
-					this.setState( 'div' in context.getDtd() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+					this.setState( CKEDITOR.dtd.checkChild( context, 'div' ) ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
 				}
 			}));
 

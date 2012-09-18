@@ -62,7 +62,7 @@
 				var listItem = listNode.getChild( i );
 
 				// Fixing malformed nested lists by moving it into a previous list item. (#6236)
-				if ( listItem.type == CKEDITOR.NODE_ELEMENT && listItem.getName() in CKEDITOR.dtd.$list )
+				if ( listItem.type == CKEDITOR.NODE_ELEMENT && listItem.is( CKEDITOR.dtd.$list ) )
 					CKEDITOR.plugins.list.listToArray( listItem, database, baseArray, baseIndentLevel + 1 );
 
 				// It may be a text node or some funny stuff.
@@ -199,7 +199,9 @@
 							last.remove();
 						}
 
-						if ( !( last = currentListItem.getLast( nonEmpty ) && last.type == CKEDITOR.NODE_ELEMENT && last.getName() in CKEDITOR.dtd.$block ) ) {
+						if ( !( last = currentListItem.getLast( nonEmpty ) &&
+													 last.type == CKEDITOR.NODE_ELEMENT &&
+													 last.is( CKEDITOR.dtd.$block ) ) ) {
 							currentListItem.append( doc.createElement( 'br' ) );
 						}
 					}
@@ -229,7 +231,7 @@
 						CKEDITOR.dom.element.clearMarkers( database, currentNode );
 
 						// Clear redundant direction attribute specified on list items.
-						if ( currentNode.getName() in CKEDITOR.dtd.$listItem )
+						if ( currentNode.is( CKEDITOR.dtd.$listItem ) )
 							cleanUpDirection( currentNode );
 					}
 
@@ -680,7 +682,10 @@
 
 	// Check if node is block element that recieves text.
 	function isTextBlock( node ) {
-		return node.type == CKEDITOR.NODE_ELEMENT && ( node.getName() in CKEDITOR.dtd.$block || node.getName() in CKEDITOR.dtd.$listItem ) && CKEDITOR.dtd[ node.getName() ][ '#' ];
+		return node.type == CKEDITOR.NODE_ELEMENT &&
+					 ( node.is( CKEDITOR.dtd.$block ) ||
+						 node.is( CKEDITOR.dtd.$listItem ) ) &&
+					 CKEDITOR.dtd.checkChild( node, '#' );
 	}
 
 	// Merge the visual line content at the cursor range into the block.
@@ -754,7 +759,7 @@
 		var walker = new CKEDITOR.dom.walker( walkerRng );
 		walker.evaluator = function( node ) { return nonEmpty( node ) && !blockBogus( node ); };
 		var next = walker.next();
-		if ( next && next.type == CKEDITOR.NODE_ELEMENT && next.getName() in CKEDITOR.dtd.$list )
+		if ( next && next.type == CKEDITOR.NODE_ELEMENT && next.is( CKEDITOR.dtd.$list ) )
 			mergeListSiblings( next );
 
 		cursor.moveToBookmark( bm );

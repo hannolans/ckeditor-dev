@@ -46,8 +46,7 @@
 			return definition;
 		})();
 
-		// DTD of 'div' element
-		var dtd = CKEDITOR.dtd.div;
+		var DTD = CKEDITOR.dtd;
 
 		// Get the first div limit element on the element's path.
 		// @param {Object} element
@@ -112,9 +111,6 @@
 			var bookmarks = selection.createBookmarks();
 			var i, iterator;
 
-			// Calcualte a default block tag if we need to create blocks.
-			var blockTag = editor.config.enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p';
-
 			// collect all included elements from dom-iterator
 			for ( i = 0; i < ranges.length; i++ ) {
 				iterator = ranges[ i ].createIterator();
@@ -126,7 +122,7 @@
 						for ( j = 0; j < childNodes.count(); j++ )
 							addSafely( containedBlocks, childNodes.getItem( j ), database );
 					} else {
-						while ( !dtd[ block.getName() ] && !block.equals( ranges[ i ].root ) )
+						while ( !DTD.checkChild( 'div', block ) && !block.equals( ranges[ i ].root ) )
 							block = block.getParent();
 						addSafely( containedBlocks, block, database );
 					}

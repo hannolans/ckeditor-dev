@@ -179,6 +179,7 @@
 	CKEDITOR.htmlParser.fragment.fromBBCode = function( source ) {
 		var parser = new CKEDITOR.BBCodeParser(),
 			fragment = new CKEDITOR.htmlParser.fragment(),
+			DTD = CKEDITOR.dtd,
 			pendingInline = [],
 			pendingBrs = 0,
 			currentNode = fragment,
@@ -187,12 +188,11 @@
 		function checkPending( newTagName ) {
 			if ( pendingInline.length > 0 ) {
 				for ( var i = 0; i < pendingInline.length; i++ ) {
-					var pendingElement = pendingInline[ i ],
-						pendingName = pendingElement.name,
-						pendingDtd = CKEDITOR.dtd[ pendingName ],
-						currentDtd = currentNode.name && CKEDITOR.dtd[ currentNode.name ];
+					var pendingElement = pendingInline[ i ];
 
-					if ( ( !currentDtd || currentDtd[ pendingName ] ) && ( !newTagName || !pendingDtd || pendingDtd[ newTagName ] || !CKEDITOR.dtd[ newTagName ] ) ) {
+					if ( DTD.checkChild( currentNode, pendingElement ) &&
+							 ( !newTagName || DTD.checkChild( pendingElement, newTagName ) ) ) {
+
 						// Get a clone for the pending element.
 						pendingElement = pendingElement.clone();
 
@@ -254,17 +254,14 @@
 			var element = new CKEDITOR.htmlParser.element( tagName, attributes );
 
 			// This is a tag to be removed if empty, so do not add it immediately.
-			if ( CKEDITOR.dtd.$removeEmpty[ tagName ] ) {
+			if ( CKEDITOR.dtd.isRemoveEmpty( tagName ) ) {
 				pendingInline.push( element );
 				return;
 			}
 
 			var currentName = currentNode.name;
-
-			var currentDtd = currentName && ( CKEDITOR.dtd[ currentName ] || ( currentNode._.isBlockLike ? CKEDITOR.dtd.div : CKEDITOR.dtd.span ) );
-
 			// If the element cannot be child of the current element.
-			if ( currentDtd && !currentDtd[ tagName ] ) {
+			if ( !DTD.checkChild( currentNode, tagName ) ) {
 				var reApply = false,
 					addPoint; // New position to start adding nodes.
 
@@ -364,8 +361,7 @@
 		};
 
 		parser.onText = function( text ) {
-			var currentDtd = CKEDITOR.dtd[ currentNode.name ];
-			if ( !currentDtd || currentDtd[ '#' ] ) {
+			if ( CKEDITOR.dtd.checkChild( currentNode, '#' ) ) {
 				checkPendingBrs();
 				checkPending();
 
@@ -464,13 +460,13 @@
 				return this._.rules[ tagName ] && this._.rules[ tagName ][ ruleName ];
 			},
 
-			openTag: function( tag, attributes ) {
+			openTag: function( tag, el ) {
 				if ( tag in bbcodeMap ) {
 					if ( this.getRule( tag, 'breakBeforeOpen' ) )
 						this.lineBreak( 1 );
 
 					this.write( '[', tag );
-					var option = attributes.option;
+					var option = el.attributes.option;
 					option && this.write( '=', option );
 					this.write( ']' );
 

@@ -19,6 +19,11 @@
 		 * @property {String}
 		 */
 		this.value = value;
+
+		/** @private */
+		this._ = {
+			isBlockLike: false
+		};
 	};
 
 	CKEDITOR.htmlParser.cdata.prototype = {

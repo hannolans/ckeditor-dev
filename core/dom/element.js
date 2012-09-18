@@ -552,22 +552,6 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		},
 
 	/**
-	 * Gets the DTD entries for this element.
-	 *
-	 * @returns {Object} An object containing the list of elements accepted
-	 * by this element.
-	 */
-	getDtd: function() {
-		var dtd = CKEDITOR.dtd[ this.getName() ];
-
-		this.getDtd = function() {
-			return dtd;
-		};
-
-		return dtd;
-	},
-
-	/**
 	 * Gets all this element's descendants having given tag name.
 	 *
 	 * @method
@@ -794,12 +778,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			return false;
 		}
 
-		if ( textCursor !== false ) {
-			// Get the element DTD (defaults to span for unknown elements).
-			var dtd = CKEDITOR.dtd[ name ] || CKEDITOR.dtd.span;
-			// In the DTD # == text node.
-			return !!( dtd && dtd[ '#' ] );
-		}
+		if ( textCursor !== false )
+			return CKEDITOR.dtd.checkChild( this, '#' );
 
 		return true;
 	},
@@ -876,7 +856,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @returns {Boolean}
 	 */
 	isEmptyInlineRemoveable: function() {
-		if ( !CKEDITOR.dtd.$removeEmpty[ this.getName() ] )
+		if ( !CKEDITOR.dtd.isRemoveEmpty( this ) )
 			return false;
 
 		var children = this.getChildren();

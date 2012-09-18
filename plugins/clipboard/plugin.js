@@ -967,8 +967,6 @@
 			// What's finally allowed (cke:br will be removed later).
 			allowedIf = { p:1,br:1,'cke:br':1 },
 
-			knownIf = CKEDITOR.dtd,
-
 			// All names that will be removed (with content).
 			removeIf = CKEDITOR.tools.extend( { area:1,basefont:1,embed:1,iframe:1,map:1,object:1,param:1 }, CKEDITOR.dtd.$nonBodyContent, CKEDITOR.dtd.$cdata );
 
@@ -1039,7 +1037,7 @@
 						delete element.name;
 
 					// Surround other known element with <brs> and strip tags.
-					else if ( knownIf[ initialName ] ) {
+					else if ( CKEDITOR.dtd.isKnown( initialName ) ) {
 						// TODO shitty code - waitin' for htmlParse.element fix.
 						br = new CKEDITOR.htmlParser.element( 'cke:br' );
 						br.isEmpty = true;

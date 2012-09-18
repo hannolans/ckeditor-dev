@@ -33,22 +33,9 @@ CKEDITOR.htmlParser.fragment = function() {
 };
 
 (function() {
-	// Block-level elements whose internal structure should be respected during
-	// parser fixing.
-	var nonBreakingBlocks = CKEDITOR.tools.extend( { table:1,ul:1,ol:1,dl:1 }, CKEDITOR.dtd.table, CKEDITOR.dtd.ul, CKEDITOR.dtd.ol, CKEDITOR.dtd.dl );
 
 	// IE < 8 don't output the close tag on definition list items. (#6975)
 	var optionalCloseTags = CKEDITOR.env.ie && CKEDITOR.env.version < 8 ? { dd:1,dt:1 } : {};
-
-	var listBlocks = { ol:1,ul:1 };
-
-	// Dtd of the fragment element, basically it accept anything except for intermediate structure, e.g. orphan <li>.
-	var rootDtd = CKEDITOR.tools.extend( {}, { html:1 }, CKEDITOR.dtd.html, CKEDITOR.dtd.body, CKEDITOR.dtd.head, { style:1,script:1 } );
-
-	function isRemoveEmpty( node ) {
-		// Empty link is to be removed when empty but not anchor. (#7894)
-		return node.name == 'a' && node.attributes.href || CKEDITOR.dtd.$removeEmpty[ node.name ];
-	}
 
 	/**
 	 * Creates a {@link CKEDITOR.htmlParser.fragment} from an HTML string.
@@ -74,6 +61,7 @@ CKEDITOR.htmlParser.fragment = function() {
 
 		var root = parent instanceof CKEDITOR.htmlParser.element ? parent : typeof parent == 'string' ? new CKEDITOR.htmlParser.element( parent ) : new CKEDITOR.htmlParser.fragment();
 
+		var DTD = CKEDITOR.dtd;
 		var pendingInline = [],
 			pendingBRs = [],
 			currentNode = root,
@@ -88,12 +76,12 @@ CKEDITOR.htmlParser.fragment = function() {
 			if ( pendingInline.length > 0 ) {
 				for ( var i = 0; i < pendingInline.length; i++ ) {
 					var pendingElement = pendingInline[ i ],
-						pendingName = pendingElement.name,
-						pendingDtd = CKEDITOR.dtd[ pendingName ],
-						currentDtd = currentNode.name && CKEDITOR.dtd[ currentNode.name ];
+						pendingName = pendingElement.name;
 
-					if ( ( !currentDtd || currentDtd[ pendingName ] ) && ( !newTagName || !pendingDtd || pendingDtd[ newTagName ] || !CKEDITOR.dtd[ newTagName ] ) ) {
-						if ( !pendingBRsSent ) {
+					if ( DTD.checkChild( currentNode, pendingElement ) &&
+							 ( !newTagName || DTD.checkChild( pendingElement, newTagName ) ) ) {
+
+						if ( !( newTagName in DTD.$block || pendingBRsSent ) ) {
 							sendPendingBRs();
 							pendingBRsSent = 1;
 						}
@@ -170,7 +158,7 @@ CKEDITOR.htmlParser.fragment = function() {
 			}
 
 			// Avoid adding empty inline.
-			if ( !( isRemoveEmpty( element ) && !element.children.length ) )
+			if ( !( DTD.isRemoveEmpty( element ) && !element.children.length ) )
 				target.add( element );
 
 			if ( element.name == 'pre' )
@@ -193,7 +181,7 @@ CKEDITOR.htmlParser.fragment = function() {
 			// Check for parent that can contain block.
 			if ( ( parent == root || parent.name == 'body' ) &&
 			     fixingBlock &&
-			     CKEDITOR.dtd[ parent.name ][ fixingBlock ] )
+			     DTD.checkChild( parent, fixingBlock ) )
 			{
 				var name, realName;
 				if ( node.attributes && ( realName = node.attributes[ 'data-cke-real-element-type' ] ) )
@@ -201,11 +189,17 @@ CKEDITOR.htmlParser.fragment = function() {
 				else
 					name = node.name;
 
-				// Text node, inline elements are subjected, except for <script>/<style>.
-				return name && name in CKEDITOR.dtd.$inline &&
-				       !( name in CKEDITOR.dtd.head ) &&
-				       !node.isOrphan ||
-				       node.type == CKEDITOR.NODE_TEXT;
+				// Ignore block-level transparent.
+				if ( name in DTD.$transparent && node._.isBlockLike )
+					return false;
+
+				// Inline elements, except for <script> and <style>
+				if ( name in DTD.$inline && !DTD.checkChild( 'head', name ) && !node.isOrphan )
+					return true;
+
+				// Text node that are not inter-element whitespace.
+				if ( node.type == CKEDITOR.NODE_TEXT && CKEDITOR.tools.trim( node.value ) )
+					return true;
 			}
 		}
 
@@ -221,7 +215,7 @@ CKEDITOR.htmlParser.fragment = function() {
 			element.isOptionalClose = tagName in optionalCloseTags || optionalClose;
 
 			// This is a tag to be removed if empty, so do not add it immediately.
-			if ( isRemoveEmpty( element ) ) {
+			if ( DTD.isRemoveEmpty( element ) ) {
 				pendingInline.push( element );
 				return;
 			} else if ( tagName == 'pre' )
@@ -240,16 +234,15 @@ CKEDITOR.htmlParser.fragment = function() {
 			while ( 1 ) {
 				var currentName = currentNode.name;
 
-				var currentDtd = currentName ? ( CKEDITOR.dtd[ currentName ] || ( currentNode._.isBlockLike ? CKEDITOR.dtd.div : CKEDITOR.dtd.span ) ) : rootDtd;
-
 				// If the element cannot be child of the current element.
-				if ( !element.isUnknown && !currentNode.isUnknown && !currentDtd[ tagName ] ) {
+				if ( !element.isUnknown && !currentNode.isUnknown &&
+						 !DTD.checkChild( currentNode, tagName ) ) {
 					// Current node doesn't have a close tag, time for a close
 					// as this element isn't fit in. (#7497)
 					if ( currentNode.isOptionalClose )
 						parser.onTagClose( currentName );
 					// Fixing malformed nested lists by moving it into a previous list item. (#3828)
-					else if ( tagName in listBlocks && currentName in listBlocks ) {
+					else if ( tagName in DTD.$list && currentName in DTD.$list ) {
 						var children = currentNode.children,
 							lastChild = children[ children.length - 1 ];
 
@@ -261,20 +254,20 @@ CKEDITOR.htmlParser.fragment = function() {
 						currentNode = lastChild;
 					}
 					// Establish new list root for orphan list items.
-					else if ( tagName in CKEDITOR.dtd.$listItem && currentName != tagName )
+					else if ( tagName in DTD.$listItem && currentName != tagName )
 						parser.onTagOpen( tagName == 'li' ? 'ul' : 'dl', {}, 0, 1 );
 					// We're inside a structural block like table and list, AND the incoming element
 					// is not of the same type (e.g. <td>td1<td>td2</td>), we simply add this new one before it,
 					// and most importantly, return back to here once this element is added,
 					// e.g. <table><tr><td>td1</td><p>p1</p><td>td2</td></tr></table>
-					else if ( currentName in nonBreakingBlocks && currentName != tagName ) {
+					else if ( currentName in DTD.$structural && currentName != tagName ) {
 						!element.returnPoint && ( element.returnPoint = currentNode );
 						currentNode = currentNode.parent;
 					} else {
 						// The current element is an inline element, which
 						// need to be continued even after the close, so put
 						// it in the pending list.
-						if ( currentName in CKEDITOR.dtd.$inline )
+						if ( DTD.isRemoveEmpty( currentNode ) )
 							pendingInline.unshift( currentNode );
 
 						// The most common case where we just need to close the
@@ -369,12 +362,14 @@ CKEDITOR.htmlParser.fragment = function() {
 					return;
 			}
 
-			var currentName = currentNode.name,
-				currentDtd = currentName ? ( CKEDITOR.dtd[ currentName ] || ( currentNode._.isBlockLike ? CKEDITOR.dtd.div : CKEDITOR.dtd.span ) ) : rootDtd;
-
+			var currentName = currentNode.name;
 			// Fix orphan text in list/table. (#8540) (#8870)
-			if ( !inTextarea && !currentDtd[ '#' ] && currentName in nonBreakingBlocks ) {
-				parser.onTagOpen( currentName in listBlocks ? 'li' : currentName == 'dl' ? 'dd' : currentName == 'table' ? 'tr' : currentName == 'tr' ? 'td' : '' );
+			if ( !inTextarea && !DTD.checkChild( currentNode, '#' ) && currentName in DTD.$structural ) {
+
+				parser.onTagOpen( currentName in DTD.$list ? 'li' :
+													currentName == 'dl' ? 'dd' :
+													currentName == 'table' ? 'tr' :
+													currentName == 'tr' ? 'td' : '' );
 				parser.onText( text );
 				return;
 			}
@@ -468,6 +463,10 @@ CKEDITOR.htmlParser.fragment = function() {
 
 			if ( !this._.hasInlineStarted )
 				this._.hasInlineStarted = node.type == CKEDITOR.NODE_TEXT || ( node.type == CKEDITOR.NODE_ELEMENT && !node._.isBlockLike );
+
+			// Transparent element that contains block.
+			if ( this.name in CKEDITOR.dtd.$transparent && node._.isBlockLike )
+				this._.isBlockLike = 1;
 		},
 
 		/**

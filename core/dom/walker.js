@@ -308,10 +308,11 @@
 	 * @todo
 	 */
 	CKEDITOR.dom.element.prototype.isBlockBoundary = function( customNodeNames ) {
-		var nodeNameMatches = customNodeNames ? CKEDITOR.tools.extend( {}, CKEDITOR.dtd.$block, customNodeNames || {} ) : CKEDITOR.dtd.$block;
-
+		var blocks = CKEDITOR.tools.extend( {}, CKEDITOR.dtd.$block, customNodeNames );
 		// Don't consider floated formatting as block boundary, fall back to dtd check in that case. (#6297)
-		return this.getComputedStyle( 'float' ) == 'none' && blockBoundaryDisplayMatch[ this.getComputedStyle( 'display' ) ] || nodeNameMatches[ this.getName() ];
+		return this.getComputedStyle( 'float' ) == 'none' &&
+					 blockBoundaryDisplayMatch[ this.getComputedStyle( 'display' ) ] ||
+					 blocks[ this.getName() ];
 	};
 
 	/**
@@ -434,7 +435,10 @@
 		isWhitespaces = CKEDITOR.dom.walker.whitespaces(),
 		isBookmark = CKEDITOR.dom.walker.bookmark(),
 		toSkip = function( node ) {
-			return isBookmark( node ) || isWhitespaces( node ) || node.type == CKEDITOR.NODE_ELEMENT && node.getName() in CKEDITOR.dtd.$inline && !( node.getName() in CKEDITOR.dtd.$empty );
+			return isBookmark( node ) ||
+						 isWhitespaces( node ) ||
+						 node.type == CKEDITOR.NODE_ELEMENT &&
+						 CKEDITOR.dtd.isRemoveEmpty( node );
 		};
 
 	/**

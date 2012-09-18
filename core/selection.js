@@ -61,7 +61,7 @@
 
 	function rangeRequiresFix( range ) {
 		function isInlineCt( node ) {
-			return node && node.type == CKEDITOR.NODE_ELEMENT && node.getName() in CKEDITOR.dtd.$removeEmpty;
+			return node && node.type == CKEDITOR.NODE_ELEMENT && CKEDITOR.dtd.isRemoveEmpty( node );
 		}
 
 		function singletonBlock( node ) {
@@ -1145,10 +1145,13 @@
 									tag = node.getName();
 
 									// Bypass bogus br at the end of block.
-									if ( tag == 'br' && isEnd && node.equals( node.getParent().getBogus() ) )
+									if ( tag == 'br' &&
+											 isEnd &&
+											 node.equals( node.getParent().getBogus() ) )
 										return true;
 
-									if ( isWalkOut && tag in enlargeables || tag in CKEDITOR.dtd.$removeEmpty )
+									if ( isWalkOut && tag in enlargeables ||
+											 node.is( CKEDITOR.dtd.$removeEmpty )  )
 										return true;
 								}
 

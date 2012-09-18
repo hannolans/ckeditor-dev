@@ -43,7 +43,10 @@
 			}
 
 			// Asserting element DTD depending on mode.
-			if ( mode == CKEDITOR.ELEMENT_MODE_INLINE && !element.is( CKEDITOR.dtd.$editable ) || mode == CKEDITOR.ELEMENT_MODE_REPLACE && element.is( CKEDITOR.dtd.$nonBodyContent ) )
+			if ( mode == CKEDITOR.ELEMENT_MODE_INLINE &&
+					 !element.is( CKEDITOR.dtd.$editable ) ||
+					 mode == CKEDITOR.ELEMENT_MODE_REPLACE &&
+					 element.is( CKEDITOR.dtd.$nonBodyContent ) )
 				throw new Error( 'The specified element mode is not supported on element: "' + element.getName() + '".' );
 
 
@@ -296,7 +299,7 @@
 		 *
 		 * @property {Boolean}
 		 */
-		editor.blockless = editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE && !CKEDITOR.dtd[ editor.element.getName() ][ 'p' ];
+		editor.blockless = editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE && editor.element.is( CKEDITOR.dtd.$phrasingBlock );
 
 		/**
 		 * The [tabbing navigation](http://en.wikipedia.org/wiki/Tabbing_navigation) order determined for this editor instance.

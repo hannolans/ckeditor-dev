@@ -60,8 +60,8 @@ CKEDITOR.STYLE_INLINE = 2;
 CKEDITOR.STYLE_OBJECT = 3;
 
 (function() {
-	var blockElements = { address:1,div:1,h1:1,h2:1,h3:1,h4:1,h5:1,h6:1,p:1,pre:1,section:1,header:1,footer:1,nav:1,article:1,aside:1,figure:1,dialog:1,hgroup:1,time:1,meter:1,menu:1,command:1,keygen:1,output:1,progress:1,details:1,datagrid:1,datalist:1 },
-		objectElements = { a:1,embed:1,hr:1,img:1,li:1,object:1,ol:1,table:1,td:1,tr:1,th:1,ul:1,dl:1,dt:1,dd:1,form:1,audio:1,video:1 };
+
+	var dtd = CKEDITOR.dtd;
 
 	var semicolonFixRegex = /\s*(?:;\s*|$)/,
 		varRegex = /#\((.+?)\)/g;
@@ -92,8 +92,8 @@ CKEDITOR.STYLE_OBJECT = 3;
 		                              styleDefinition.element ) : '*';
 
 		this.type = styleDefinition.type ||
-		            (blockElements[ element ] ? CKEDITOR.STYLE_BLOCK :
-		             objectElements[ element ] ? CKEDITOR.STYLE_OBJECT :
+		            ( dtd.$block[ element ] ? CKEDITOR.STYLE_BLOCK :
+		             dtd.$object[ element ] ? CKEDITOR.STYLE_OBJECT :
 		             CKEDITOR.STYLE_INLINE );
 
 		// If the 'element' property is an object with a set of possible element, it will be applied like an object style: only to existing elements
@@ -449,7 +449,6 @@ CKEDITOR.STYLE_OBJECT = 3;
 
 		var elementName = this.element;
 		var def = this._.definition;
-		var isUnknownElement;
 
 		// Indicates that fully selected read-only elements are to be included in the styling range.
 		var ignoreReadonly = def.ignoreReadonly,
@@ -459,9 +458,6 @@ CKEDITOR.STYLE_OBJECT = 3;
 		// to get it from the document data.
 		if ( includeReadonly == undefined )
 			includeReadonly = document.getCustomData( 'cke_includeReadonly' );
-
-		// Get the DTD definition for the element. Defaults to "span".
-		var dtd = CKEDITOR.dtd[ elementName ] || ( isUnknownElement = true, CKEDITOR.dtd.span );
 
 		// Expand the range.
 		range.enlarge( CKEDITOR.ENLARGE_INLINE, 1 );
@@ -517,7 +513,8 @@ CKEDITOR.STYLE_OBJECT = 3;
 
 				// Check if the current node can be a child of the style element.
 				if ( !nodeName ||
-				     ( dtd[ nodeName ] && !nodeIsNoStyle &&
+				     ( CKEDITOR.dtd.checkChild( elementName, currentNode ) &&
+							 !nodeIsNoStyle &&
 				       ( !nodeIsReadonly || includeReadonly ) &&
 				       ( currentNode.getPosition( lastNode ) |
 				         CKEDITOR.POSITION_PRECEDING | CKEDITOR.POSITION_IDENTICAL |
@@ -530,15 +527,14 @@ CKEDITOR.STYLE_OBJECT = 3;
 					// Check if the style element can be a child of the current
 					// node parent or if the element is not defined in the DTD.
 					if ( currentParent &&
-					     ( ( currentParent.getDtd() ||
-					         CKEDITOR.dtd.span )[ elementName ] || isUnknownElement ) &&
+					     ( CKEDITOR.dtd.checkChild( currentParent, elementName ) ) &&
 					     ( !def.parentRule || def.parentRule( currentParent ) ) ) {
 						// This node will be part of our range, so if it has not
 						// been started, place its start right before the node.
 						// In the case of an element node, it will be included
 						// only if it is entirely inside the range.
 						if ( !styleRange &&
-						     ( !nodeName || !CKEDITOR.dtd.$removeEmpty[ nodeName ] ||
+						     ( !nodeName || !CKEDITOR.dtd.isRemoveEmpty( currentNode ) ||
 						       ( currentNode.getPosition( lastNode ) |
 						         CKEDITOR.POSITION_PRECEDING | CKEDITOR.POSITION_IDENTICAL |
 						         CKEDITOR.POSITION_IS_CONTAINED ) ==
@@ -561,7 +557,8 @@ CKEDITOR.STYLE_OBJECT = 3;
 							// check if the parent itself can be added completelly
 							// to the range, otherwise apply the style immediately.
 							while ( ( applyStyle = !includedNode.getNext( notBookmark ) ) &&
-							        ( parentNode = includedNode.getParent(), dtd[ parentNode.getName() ] ) &&
+							        ( parentNode = includedNode.getParent() ) &&
+											CKEDITOR.dtd.checkChild( elementName, parentNode ) &&
 							        ( parentNode.getPosition( firstNode ) |
 							          CKEDITOR.POSITION_FOLLOWING |
 							          CKEDITOR.POSITION_IDENTICAL |
@@ -1104,13 +1101,18 @@ CKEDITOR.STYLE_OBJECT = 3;
 		}
 
 		// Remove overrides, but don't remove the element if it's a block element
-		removeOverrides( element, overrides, blockElements[ element.getName() ] );
+		removeOverrides( element, overrides, element.is( dtd.$block ) );
 
 		if ( removeEmpty ) {
 			if ( this._.definition.alwaysRemoveElement )
 				removeNoAttribsElement( element, 1 );
 			else {
-				!CKEDITOR.dtd.$block[ element.getName() ] || this._.enterMode == CKEDITOR.ENTER_BR && !element.hasAttributes() ? removeNoAttribsElement( element ) : element.renameNode( this._.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' );
+
+				if ( !element.is( CKEDITOR.dtd.$block ) ||
+						 this._.enterMode == CKEDITOR.ENTER_BR && !element.hasAttributes() )
+					removeNoAttribsElement( element );
+				else
+					element.renameNode( this._.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' );
 			}
 		}
 	}
@@ -1176,7 +1178,7 @@ CKEDITOR.STYLE_OBJECT = 3;
 		// If no more attributes remained in the element, remove it,
 		// leaving its children.
 		if ( !element.hasAttributes() || forceRemove ) {
-			if ( CKEDITOR.dtd.$block[ element.getName() ] ) {
+			if ( element.is( CKEDITOR.dtd.$block ) ) {
 				var previous = element.getPrevious( nonWhitespaces ),
 					next = element.getNext( nonWhitespaces );
 

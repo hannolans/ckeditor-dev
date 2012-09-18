@@ -180,7 +180,7 @@ CKEDITOR.dom.elementPath.prototype = {
 		// Check for block context.
 		if ( tag in CKEDITOR.dtd.$block ) {
 			holder = ( this.root.equals( this.block ) && this.block ) || this.blockLimit;
-			return !!holder.getDtd()[ tag ];
+			return CKEDITOR.dtd.checkChild( holder, tag );
 		}
 
 		return true;

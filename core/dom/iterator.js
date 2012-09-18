@@ -55,7 +55,7 @@
 			blockTag = blockTag || 'p';
 
 			// Block-less range should be checked first.
-			if ( !CKEDITOR.dtd[ this.range.root.getName() ][ blockTag ] )
+			if ( !CKEDITOR.dtd.checkChild( this.range.root, blockTag ) )
 				return null;
 
 			// The block element to be returned.

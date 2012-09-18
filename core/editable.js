@@ -221,7 +221,8 @@
 					selection = editor.getSelection(),
 					ranges = selection.getRanges(),
 					elementName = element.getName(),
-					isBlock = CKEDITOR.dtd.$block[ elementName ];
+					dtd = CKEDITOR.dtd,
+					isBlock = dtd.$block[ elementName ];
 
 				var range, clone, lastElement;
 
@@ -236,13 +237,12 @@
 
 						// If we're inserting a block at dtd-violated position, split
 						// the parent blocks until we reach blockLimit.
-						var current, dtd;
+						var current;
 						if ( isBlock ) {
 							while ( ( current = range.getCommonAncestor( 0, 1 ) ) &&
-							        ( dtd = CKEDITOR.dtd[ current.getName() ] ) &&
-							        !( dtd && dtd[ elementName ] ) ) {
+							        !( dtd && dtd.checkChild( current, element ) ) ) {
 								// Split up inline elements.
-								if ( current.getName() in CKEDITOR.dtd.span )
+								if ( CKEDITOR.dtd.isRemoveEmpty( current ) )
 									range.splitElement( current );
 								// If we're in an empty block which indicate a new paragraph,
 								// simply replace it with the inserting block.(#3664)
@@ -278,7 +278,7 @@
 						     next.is( CKEDITOR.dtd.$block ) ) {
 
 							// If the next one is a text block, move cursor to the start of it's content.
-							if ( next.getDtd()[ '#' ] )
+							if ( next.is( CKEDITOR.dtd.$textBlock ) )
 								range.moveToElementEditStart( next );
 							// Otherwise move cursor to the before end of the last element.
 							else
@@ -1166,7 +1166,8 @@
 
 					// Find the first ancestor that can contain current node.
 					// This one won't be split.
-					while ( insertionContainer && !DTD[ insertionContainer.getName() ][ nodeData.name ] ) {
+					while ( insertionContainer &&
+									!DTD.checkChild( insertionContainer, nodeData.name ) ) {
 						if ( insertionContainer.equals( blockLimit ) ) {
 							insertionContainer = null;
 							break;
@@ -1187,7 +1188,7 @@
 					// Unable to make the insertion happen in place, resort to the content filter.
 					else {
 						// If everything worked fine insertionContainer == blockLimit here.
-						filteredNodes = filterElement( nodeData.node, blockLimit.getName(), !nodeIndex, nodeIndex == nodesData.length - 1 );
+						filteredNodes = filterElement( nodeData.node, blockLimit, !nodeIndex, nodeIndex == nodesData.length - 1 );
 					}
 				}
 
@@ -1312,7 +1313,6 @@
 		function extractNodesData( dataWrapper, startContainer ) {
 			var node, sibling, nodeName, allowed,
 				nodesData = [],
-				allowedNames = DTD[ startContainer.getName() ],
 				nodeIndex = 0,
 				nodesList = dataWrapper.getChildren(),
 				nodesCount = nodesList.count(),
@@ -1326,7 +1326,7 @@
 
 				if ( checkIfElement( node ) ) {
 					nodeName = node.getName();
-					allowed = !!allowedNames[ nodeName ];
+					allowed = DTD.checkChild( startContainer, node );
 
 					// Mark <brs data-cke-eol="1"> at the beginning and at the end.
 					if ( nodeName == 'br' && node.data( 'cke-eol' ) && ( !nodeIndex || nodeIndex == nodesCount - 1 ) ) {
@@ -1370,8 +1370,8 @@
 		}
 
 		// TODO: Review content transformation rules on filtering element.
-		function filterElement( element, parentName, isFirst, isLast ) {
-			var nodes = filterElementInner( element, parentName ),
+		function filterElement( element, parent, isFirst, isLast ) {
+			var nodes = filterElementInner( element, parent ),
 				nodes2 = [],
 				nodesCount = nodes.length,
 				nodeIndex = 0,
@@ -1405,13 +1405,12 @@
 			return nodes2;
 		}
 
-		function filterElementInner( element, parentName ) {
+		function filterElementInner( element, parent ) {
 			var nodes = [],
 				children = element.getChildren(),
 				childrenCount = children.count(),
 				child,
 				childIndex = 0,
-				allowedNames = DTD[ parentName ],
 				surroundBySpaces = !element.is( DTD.$inline ) || element.is( 'br' );
 
 			if ( surroundBySpaces )
@@ -1420,8 +1419,8 @@
 			for ( ; childIndex < childrenCount; childIndex++ ) {
 				child = children.getItem( childIndex );
 
-				if ( checkIfElement( child ) && !child.is( allowedNames ) )
-					nodes = nodes.concat( filterElementInner( child, parentName ) );
+				if ( checkIfElement( child ) && !DTD.checkChild( parent, child ) )
+					nodes = nodes.concat( filterElementInner( child, parent ) );
 				else
 					nodes.push( child );
 			}
@@ -1437,7 +1436,7 @@
 		}
 
 		function isInline( node ) {
-			return node && checkIfElement( node ) && ( node.is( DTD.$removeEmpty ) || node.is( 'a' ) && !node.isBlockBoundary() );
+			return node && checkIfElement( node ) && DTD.isRemoveEmpty( node ) && !node.isBlockBoundary();
 		}
 
 		var blockMergedTags = { p:1,div:1,h1:1,h2:1,h3:1,h4:1,h5:1,h6:1,ul:1,ol:1,li:1,pre:1,dl:1,blockquote:1 };
@@ -1550,8 +1549,15 @@
 				wrapper = doc.createText( '{cke-peak}' ),
 				limit = that.inlineStylesRoot.getParent();
 
+			var clone;
 			while ( !element.equals( limit ) ) {
-				wrapper = wrapper.appendTo( element.clone() );
+
+				clone = element.clone();
+
+				if ( clone.is( DTD.$transparent ) )
+					clone.data( 'cke-inline', 1 );
+
+				wrapper = wrapper.appendTo( clone );
 				element = element.getParent();
 			}
 

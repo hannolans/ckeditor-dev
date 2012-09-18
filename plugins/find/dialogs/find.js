@@ -12,7 +12,9 @@
 
 	// Elements which break characters been considered as sequence.
 	function nonCharactersBoundary( node ) {
-		return !( node.type == CKEDITOR.NODE_ELEMENT && node.isBlockBoundary( CKEDITOR.tools.extend( {}, CKEDITOR.dtd.$empty, CKEDITOR.dtd.$nonEditable ) ) );
+		return !( node.type == CKEDITOR.NODE_ELEMENT &&
+							node.isBlockBoundary( CKEDITOR.tools.extend( {},
+								CKEDITOR.dtd.$empty, CKEDITOR.dtd.$nonEditable ) ) );
 	}
 
 	// Get the cursor object which represent both current character and it's dom
