@@ -216,7 +216,7 @@ CKEDITOR.htmlParser.cssStyle = function() {
 			}
 
 			// Open element tag.
-			writer.openTag( writeName, attributes );
+			writer.openTag( writeName, element );
 
 			// Copy all attributes to an array.
 			var attribsArray = [];
@@ -257,16 +257,16 @@ CKEDITOR.htmlParser.cssStyle = function() {
 			var len = attribsArray.length;
 			for ( i = 0; i < len; i++ ) {
 				var attrib = attribsArray[ i ];
-				writer.attribute( attrib[ 0 ], attrib[ 1 ] );
+				writer.attribute( attrib[ 0 ], attrib[ 1 ], element );
 			}
 
 			// Close the tag.
-			writer.openTagClose( writeName, element.isEmpty );
+			writer.openTagClose( writeName, element );
 
 			if ( !element.isEmpty ) {
 				this.writeChildrenHtml.call( element, writer, isChildrenFiltered ? null : filter );
 				// Close the element.
-				writer.closeTag( writeName );
+				writer.closeTag( writeName, element );
 			}
 		},
 

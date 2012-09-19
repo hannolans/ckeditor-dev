@@ -73,15 +73,30 @@ CKEDITOR.htmlWriter = CKEDITOR.tools.createClass({
 		this._.inPre = 0;
 		this._.rules = {};
 
-		var dtd = CKEDITOR.dtd;
+		var DTD = CKEDITOR.dtd;
 
-		for ( var e in CKEDITOR.tools.extend( {}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent ) ) {
+		for ( var e in CKEDITOR.tools.extend( {}, DTD.$nonBodyContent, DTD.$block, DTD.$listItem, DTD.$tableContent ) ) {
+			var isTextBlock = e in DTD.$textBlock;
 			this.setRules( e, {
-				indent: !dtd[ e ][ '#' ],
+				indent: !isTextBlock,
 				breakBeforeOpen: 1,
-				breakBeforeClose: !dtd[ e ][ '#' ],
+				breakBeforeClose: !isTextBlock,
 				breakAfterClose: 1,
-				needsSpace: ( e in dtd.$block ) && !( e in { li:1,dt:1,dd:1 } )
+				needsSpace: ( e in DTD.$block ) && !( e in DTD.$listItem )
+			});
+		}
+
+		for ( e in DTD.$transparent )
+		{
+			this.setRules( e, function( el ) {
+				var isBlock = el._.isBlockLike;
+				return {
+								indent: 0,
+								breakBeforeOpen: isBlock,
+								breakBeforeClose: 0,
+								breakAfterClose: isBlock,
+								needsSpace: 0
+				};
 			});
 		}
 
@@ -114,8 +129,8 @@ CKEDITOR.htmlWriter = CKEDITOR.tools.createClass({
 		 * @param {Object} attributes The attributes defined for this tag. The
 		 * attributes could be used to inspect the tag.
 		 */
-		openTag: function( tagName, attributes ) {
-			var rules = this._.rules[ tagName ];
+		openTag: function( tagName, el ) {
+			var rules = this.getRules( el );
 
 			if ( this._.afterCloser && rules && rules.needsSpace && this._.needsSpace )
 				this._.output.push( '\n' );
@@ -146,10 +161,10 @@ CKEDITOR.htmlWriter = CKEDITOR.tools.createClass({
 		 * @param {Boolean} isSelfClose Indicates that this is a self-closing tag,
 		 * like `<br>` or `<img>`.
 		 */
-		openTagClose: function( tagName, isSelfClose ) {
-			var rules = this._.rules[ tagName ];
+		openTagClose: function( tagName, el ) {
+			var rules = this.getRules( el );
 
-			if ( isSelfClose ) {
+			if ( el.isEmpty ) {
 				this._.output.push( this.selfClosingEnd );
 
 				if ( rules && rules.breakAfterClose )
@@ -195,8 +210,8 @@ CKEDITOR.htmlWriter = CKEDITOR.tools.createClass({
 		 *
 		 * @param {String} tagName The element name for this tag.
 		 */
-		closeTag: function( tagName ) {
-			var rules = this._.rules[ tagName ];
+		closeTag: function( tagName, el ) {
+			var rules = this.getRules( el );
 
 			if ( rules && rules.indent )
 				this._.indentation = this._.indentation.substr( this.indentationChars.length );
@@ -318,15 +333,30 @@ CKEDITOR.htmlWriter = CKEDITOR.tools.createClass({
 		 *		writer.setRules( 'h1', {} );
 		 *
 		 * @param {String} tagName The element name to which set the rules.
-		 * @param {Object} rules An object containing the element rules.
+		 * @param {Object|Function} rules An object containing the element rules, or
+		 * a function that receives a {@link CKEDITOR.htmlParser.element} object that
+		 * returns the element rules.
 		 */
 		setRules: function( tagName, rules ) {
+
 			var currentRules = this._.rules[ tagName ];
 
-			if ( currentRules )
-				CKEDITOR.tools.extend( currentRules, rules, true );
-			else
+			if ( typeof rules == 'function' || !currentRules ) {
 				this._.rules[ tagName ] = rules;
+				return;
+			}
+
+			CKEDITOR.tools.extend( currentRules, rules, true );
+		},
+
+		/**
+		 * Retrieve the rules for the specified element.
+		 * @param el
+		 */
+		getRules : function( el ) {
+			var tagName = typeof el == 'string' ? el : el.name;
+			var rules = this._.rules[ tagName ];
+			return typeof rules == 'function' ? rules( el ) : rules;
 		}
 	}
 });

@@ -37,23 +37,14 @@ CKEDITOR.htmlParser.basicWriter = CKEDITOR.tools.createClass({
 		},
 
 		/**
-		 * Writes the tag closing part for a opener tag.
-		 *
-		 *		// Writes '>'.
-		 *		writer.openTagClose( 'p', false );
-		 *
-		 *		// Writes ' />'.
-		 *		writer.openTagClose( 'br', true );
-		 *
+		 * Writes the tag closing part for a opener tag, depending on the self-closing
+		 * intrinsic of the element.
 		 * @param {String} tagName The element name for this tag.
-		 * @param {Boolean} isSelfClose Indicates that this is a self-closing tag,
+		 * @param {CKEDITOR.htmlParser.element} element The element on subject.
 		 * like `<br>` or `<img>`.
 		 */
-		openTagClose: function( tagName, isSelfClose ) {
-			if ( isSelfClose )
-				this._.output.push( ' />' );
-			else
-				this._.output.push( '>' );
+		openTagClose: function( tagName, element ) {
+			this._.output.push( element.isEmpty ? ' />' : '>' );
 		},
 
 		/**
