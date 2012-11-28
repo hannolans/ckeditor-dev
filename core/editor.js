@@ -143,6 +143,7 @@
 		this.on( 'mode', updateCommands );
 		this.on( 'readOnly', updateCommands );
 		this.on( 'selectionChange', updateCommandsContext );
+		this.on( 'selectionChange', handleMixedDirContent );
 
 		// Handle startup focus.
 		this.on( 'instanceReady', function() {
@@ -196,6 +197,17 @@
 
 			if ( command.contextSensitive )
 				command.refresh( editor, path );
+		}
+	}
+
+	function handleMixedDirContent( ev ) {
+		var editor = ev.editor,
+			path = ev.data.path,
+			pathDir = path.direction();
+
+		if ( pathDir != ( editor._.selectionDir || editor.lang.dir ) ) {
+			editor._.selectionDir = pathDir;
+			editor.fire( 'contentDirChanged', pathDir );
 		}
 	}
 
@@ -1241,3 +1253,11 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * @param {String} name The template name.
  * @param {String} source The source data for this template.
  */
+
+/**
+ * Fired when the language direction in the specific cursor position is changed.
+ *
+ * @event contentDirChanged
+ * @param {String} data The direction in the current position.
+ */
+

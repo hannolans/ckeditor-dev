@@ -38,15 +38,6 @@
 		editor.getCommand( 'bidiltr' ).setState( selectionDir == 'ltr' ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 	}
 
-	function handleMixedDirContent( editor, path ) {
-		var directionNode = path.block || path.blockLimit || editor.editable();
-		var pathDir = directionNode.getDirection( 1 );
-		if ( pathDir != ( editor._.selDir || editor.lang.dir ) ) {
-			editor._.selDir = pathDir;
-			editor.fire( 'contentDirChanged', pathDir );
-		}
-	}
-
 	// Returns element with possibility of applying the direction.
 	// @param node
 	function getElementForDirection( node, root ) {
@@ -127,7 +118,6 @@
 			context: 'p',
 			refresh: function( editor, path ) {
 				setToolbarStates( editor, path );
-				handleMixedDirContent( editor, path );
 			},
 			exec: function( editor ) {
 				var selection = editor.getSelection(),
@@ -227,14 +217,6 @@
 					});
 				});
 			});
-
-			// Indicate that the current selection is in different direction than the UI.
-			editor.on( 'contentDirChanged', function( evt ) {
-				var func = ( editor.lang.dir != evt.data ? 'add' : 'remove' ) + 'Class';
-				var toolbar = editor.ui.space( editor.config.toolbarLocation );
-				if ( toolbar )
-					toolbar[ func ]( 'cke_mixed_dir_content' );
-			});
 		}
 	});
 
@@ -288,12 +270,4 @@
  * @param {Object} eventData
  * @param {CKEDITOR.dom.node} eventData.node The element that is being changed.
  * @param {String} eventData.dir The new direction.
- */
-
-/**
- * Fired when the language direction in the specific cursor position is changed
- *
- * @event contentDirChanged
- * @member CKEDITOR.editor
- * @param {String} eventData The direction in the current position.
  */
