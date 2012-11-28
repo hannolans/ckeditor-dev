@@ -14,6 +14,7 @@ CKEDITOR.dialog.add( 'cellProperties', function( editor ) {
 		spacer = { type: 'html', html: '&nbsp;' },
 		rtl = editor.lang.dir == 'rtl';
 
+	var colorDialog = editor.plugins.colordialog;
 	return {
 		title: langCell.title,
 		minWidth: CKEDITOR.env.ie && CKEDITOR.env.quirks ? 450 : 410,
@@ -323,7 +324,7 @@ CKEDITOR.dialog.add( 'cellProperties', function( editor ) {
 								selectedCell.removeAttribute( 'bgColor' );
 							}
 						},
-							{
+						colorDialog ? {
 							type: 'button',
 							id: 'bgColorChoose',
 							"class": 'colorChooser',
@@ -339,7 +340,7 @@ CKEDITOR.dialog.add( 'cellProperties', function( editor ) {
 									this.focus();
 								}, this );
 							}
-						}
+						} : spacer
 						]
 					},
 						spacer,
@@ -369,7 +370,8 @@ CKEDITOR.dialog.add( 'cellProperties', function( editor ) {
 								selectedCell.removeAttribute( 'borderColor' );
 							}
 						},
-							{
+
+						colorDialog ? {
 							type: 'button',
 							id: 'borderColorChoose',
 							"class": 'colorChooser',
@@ -386,7 +388,7 @@ CKEDITOR.dialog.add( 'cellProperties', function( editor ) {
 									this.focus();
 								}, this );
 							}
-						}
+						} : spacer
 						]
 					}
 					]
