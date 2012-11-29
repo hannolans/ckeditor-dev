@@ -144,7 +144,24 @@ CKEDITOR.plugins.add( 'contextmenu', {
 
 		editor.addCommand( 'contextMenu', {
 			exec: function() {
-				editor.contextMenu.open( editor.document.getBody() );
+				var editable = editor.editable(), nativeSel = editor.getSelection().getNative();
+
+				// Retrieve the selection range screen rectangle.
+				var rangeRect = ( typeof window.getSelection != 'function' ?
+									 nativeSel.createRange() :
+									 nativeSel.getRangeAt( 0 ) ).getBoundingClientRect();
+
+				var cursorPos = { x : rangeRect.left, y: rangeRect.top };
+
+				// Compensate the window scrolling if it's inline editor.
+				if ( editable.isInline() ) {
+					var scroll = CKEDITOR.document.getWindow().getScrollPosition();
+					cursorPos.x += scroll.x;
+					cursorPos.y += scroll.y;
+				}
+
+				// Open menu on position of the range start.
+				editor.contextMenu.open( editor.document.getDocumentElement(), null, cursorPos.x, cursorPos.y );
 			}
 		});
 
