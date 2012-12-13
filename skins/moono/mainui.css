@@ -219,3 +219,9 @@ Special outer level classes used in this file:
 	padding: 0 8px;
 	outline-style: none;
 }
+
+/* Fix Chrome scrolling issues. (#9746) */
+.cke_wysiwyg_frame
+{
+    position: relative;
+}
