@@ -144,14 +144,23 @@ CKEDITOR.plugins.add( 'contextmenu', {
 
 		editor.addCommand( 'contextMenu', {
 			exec: function() {
-				var editable = editor.editable(), nativeSel = editor.getSelection().getNative();
+				var editable = editor.editable(),
+					nativeSel = editor.getSelection().getNative(),
+					range = typeof window.getSelection != 'function' ? nativeSel.createRange() : nativeSel.getRangeAt( 0 ),
+					rect;
 
-				// Retrieve the selection range screen rectangle.
-				var rangeRect = ( typeof window.getSelection != 'function' ?
-									 nativeSel.createRange() :
-									 nativeSel.getRangeAt( 0 ) ).getBoundingClientRect();
+				// IE8 returns ControlRangeCollection object. DOM element must be extracted.
+				if ( range.item )
+					range = range.item( 0 );
 
-				var cursorPos = { x : rangeRect.left, y: rangeRect.top };
+				// IE9 getClientRects() yields zero-coordinate rects. In that case
+				// use getBoundingClientRect() instead.
+				if ( !range.getClientRects || ( CKEDITOR.env.ie && CKEDITOR.env.version == 9 ) )
+					rect = range.getBoundingClientRect();
+				else
+					rect = range.getClientRects()[ 0 ];
+
+				var cursorPos = { x : rect.left, y: rect.top };
 
 				// Compensate the window scrolling if it's inline editor.
 				if ( editable.isInline() ) {
