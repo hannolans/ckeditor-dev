@@ -32,6 +32,9 @@
 
 		var editor = new CKEDITOR.editor( instanceConfig, element, CKEDITOR.ELEMENT_MODE_INLINE );
 
+		// Force clean during initialization.
+		editor._.forceClean = 1;
+
 		// Initial editor data is simply loaded from the page element content to make
 		// data retrieval possible immediately after the editor creation.
 		editor.setData( element.getHtml(), null, true );
@@ -55,12 +58,13 @@
 			editor.mode = 'wysiwyg';
 			editor.fire( 'mode' );
 
+			// Clean on startup.
+			editor.resetDirty();
+			editor._.forceClean = 0;
+
 			// The editor is completely loaded for interaction.
 			editor.fireOnce( 'instanceReady' );
 			CKEDITOR.fire( 'instanceReady', null, editor );
-
-			// Clean on startup.
-			editor.resetDirty();
 
 			// give priority to plugins that relay on editor#loaded for bootstrapping.
 		}, null, null, 10000 );

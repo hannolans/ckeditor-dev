@@ -245,6 +245,9 @@ CKEDITOR.replaceClass = 'ckeditor';
 		// Create the editor instance.
 		var editor = new CKEDITOR.editor( config, element, mode );
 
+		// Force clean during initialization.
+		editor._.forceClean = 1;
+
 		// Do not replace the textarea right now, just hide it. The effective
 		// replacement will be done later in the editor creation lifecycle.
 		if ( mode == CKEDITOR.ELEMENT_MODE_REPLACE )
@@ -260,12 +263,13 @@ CKEDITOR.replaceClass = 'ckeditor';
 				attachToForm( editor );
 
 			editor.setMode( editor.config.startupMode, function() {
+				// Clean on startup.
+				editor.resetDirty();
+				editor._.forceClean = 0;
+
 				// Editor is completely loaded for interaction.
 				editor.fireOnce( 'instanceReady' );
 				CKEDITOR.fire( 'instanceReady', null, editor );
-
-				// Clean on startup.
-				editor.resetDirty();
 			});
 		});
 

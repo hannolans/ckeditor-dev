@@ -861,7 +861,7 @@
 		 * @returns {Boolean} `true` if the contents contain changes.
 		 */
 		checkDirty: function() {
-			return this._.previousValue !== this.getSnapshot();
+			return this._.forceClean ? false : this._.previousValue !== this.getSnapshot();
 		},
 
 		/**
