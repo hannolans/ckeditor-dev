@@ -1758,7 +1758,9 @@
 		 * @returns {Array} Array of bookmarks for each range.
 		 */
 		createBookmarks: function( serializable ) {
-			return this.getRanges().createBookmarks( serializable );
+			var bookmark = this.getRanges().createBookmarks( serializable );
+			this.isFake && ( bookmark.isFake = 1 );
+			return bookmark;
 		},
 
 		/**
@@ -1772,7 +1774,9 @@
 		 * @returns {Array} Array of bookmarks for each range.
 		 */
 		createBookmarks2: function( normalized ) {
-			return this.getRanges().createBookmarks2( normalized );
+			var bookmark = this.getRanges().createBookmarks2( normalized );
+			this.isFake && ( bookmark.isFake = 1 );
+			return bookmark;
 		},
 
 		/**
@@ -1791,7 +1795,12 @@
 				range.moveToBookmark( bookmarks[ i ] );
 				ranges.push( range );
 			}
-			this.selectRanges( ranges );
+
+			if ( bookmarks.isFake )
+				this.fake( ranges[ 0 ].getEnclosedNode() );
+			else
+				this.selectRanges( ranges );
+
 			return this;
 		},
 
