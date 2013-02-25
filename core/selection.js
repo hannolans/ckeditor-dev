@@ -206,9 +206,12 @@
 					evt.removeListener();
 
 					if ( restoreSel !== 0 ) {
-						var rng = editor.createRange();
-						rng.moveToElementEditStart( editable );
-						rng.select();
+						var native = editor.getSelection().getNative();
+						if ( native.isCollapsed && native.anchorNode == editable.$ ) {
+							var rng = editor.createRange();
+							rng.moveToElementEditStart( editable );
+							rng.select();
+						}
 					}
 				}, null, null, -2 );
 			}

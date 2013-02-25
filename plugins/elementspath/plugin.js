@@ -88,7 +88,6 @@
 
 
 			function onClick( elementIndex ) {
-				editor.focus();
 				var element = editor._.elementsPath.list[ elementIndex ];
 				if ( element.equals( editor.editable() ) ) {
 					var range = editor.createRange();
@@ -96,6 +95,7 @@
 					range.select();
 				} else
 					editor.getSelection().selectElement( element );
+				editor.focus();
 			}
 
 			var onClickHanlder = CKEDITOR.tools.addFunction( onClick );
