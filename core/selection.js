@@ -209,8 +209,8 @@
 						var native = editor.getSelection().getNative();
 						// Do it only if the native selection is at an unwanted
 						// place (at the very start of the editable). #10119
-						// Old IEs may not enter this "if", but this is
-						// acceptable since they do a good job in terms of
+						// IEs<9 won't enter this if (no isCollapsed property on selection instance),
+						// but this is acceptable since they do a good job in terms of
 						// default selection positioning.
 						if ( native.isCollapsed && native.anchorNode == editable.$ ) {
 							var rng = editor.createRange();
