@@ -95,6 +95,9 @@
 					range.select();
 				} else
 					editor.getSelection().selectElement( element );
+
+				// It is important to focus() *after* the above selection
+				// manipulation, otherwise Firefox will have troubles. #10119
 				editor.focus();
 			}
 
