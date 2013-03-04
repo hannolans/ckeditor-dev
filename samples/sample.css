@@ -214,34 +214,6 @@ label
 }
 
 /**
- *	CKEditor editables are automatically set with the "cke_editable" class
- *	plus cke_editable_(inline|themed) depending on the editor type.
- */
-
-/* Style a bit the inline editables. */
-.cke_editable.cke_editable_inline
-{
-	cursor: pointer;
-}
-
-/* Once an editable element gets focused, the "cke_focus" class is
-   added to it, so we can style it differently. */
-.cke_editable.cke_editable_inline.cke_focus
-{
-	box-shadow: inset 0px 0px 20px 3px #ddd, inset 0 0 1px #000;
-	outline: none;
-	background: #eee;
-	cursor: text;
-}
-
-/* Avoid pre-formatted overflows inline editable. */
-.cke_editable_inline pre
-{
-	white-space: pre-wrap;
-	word-wrap: break-word;
-}
-
-/**
  *	Samples index styles.
  */
 
@@ -292,9 +264,64 @@ dl.samples > dd
 	margin: 10px 0;
 }
 
+/**
+ *	CKEditor editables are automatically set with the "cke_editable" class
+ *	plus cke_editable_(inline|themed) depending on the editor type.
+ */
+
+.cke_editable
+{
+	padding: 10px;
+}
+
+/* Style a bit the inline editables. */
+.cke_editable.cke_editable_inline
+{
+	cursor: pointer;
+}
+
+/* Once an editable element gets focused, the "cke_focus" class is
+   added to it, so we can style it differently. */
+.cke_editable.cke_editable_inline.cke_focus
+{
+	box-shadow: inset 0px 0px 20px 3px #ddd, inset 0 0 1px #000;
+	outline: none;
+	background: #eee;
+	cursor: text;
+}
+
+/* Avoid pre-formatted overflows inline editable. */
+.cke_editable_inline pre
+{
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
 /* Used on inline samples */
 
-blockquote
+.cke_editable h1,
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4,
+.cke_editable h5,
+.cke_editable h6
+{
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+.cke_editable a
+{
+	color: #0782C1;
+}
+
+.cke_editable hr
+{
+	border: 0px;
+	border-top: 1px solid #ccc;
+}
+
+.cke_editable blockquote
 {
 	font-style: italic;
 	font-family: Georgia, Times, "Times New Roman", serif;
@@ -304,30 +331,41 @@ blockquote
 	border-width: 0;
 }
 
-.cke_contents_ltr blockquote
+.cke_editable.cke_contents_ltr blockquote
 {
 	padding-left: 20px;
 	padding-right: 8px;
 	border-left-width: 5px;
 }
 
-.cke_contents_rtl blockquote
+.cke_editable.cke_contents_rtl blockquote
 {
 	padding-left: 8px;
 	padding-right: 20px;
 	border-right-width: 5px;
 }
 
-img.right {
+.cke_editable img.right {
     border: 1px solid #ccc;
     float: right;
     margin-left: 15px;
     padding: 5px;
 }
 
-img.left {
+.cke_editable img.left {
     border: 1px solid #ccc;
     float: left;
     margin-right: 15px;
     padding: 5px;
+}
+
+.cke_editable img:hover {
+	opacity: .9;
+	filter: alpha(opacity = 90);
+}
+
+.cke_editable pre
+{
+	white-space: pre-wrap; /* CSS 2.1 */
+	word-wrap: break-word; /* IE7 */
 }
