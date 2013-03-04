@@ -269,20 +269,20 @@ dl.samples > dd
  *	plus cke_editable_(inline|themed) depending on the editor type.
  */
 
-.cke_editable
+.contents
 {
 	padding: 10px;
 }
 
 /* Style a bit the inline editables. */
-.cke_editable.cke_editable_inline
+.contents.cke_editable_inline
 {
 	cursor: pointer;
 }
 
 /* Once an editable element gets focused, the "cke_focus" class is
    added to it, so we can style it differently. */
-.cke_editable.cke_editable_inline.cke_focus
+.contents.cke_editable_inline.cke_focus
 {
 	box-shadow: inset 0px 0px 20px 3px #ddd, inset 0 0 1px #000;
 	outline: none;
@@ -291,7 +291,7 @@ dl.samples > dd
 }
 
 /* Avoid pre-formatted overflows inline editable. */
-.cke_editable_inline pre
+.contents.cke_editable_inline pre
 {
 	white-space: pre-wrap;
 	word-wrap: break-word;
@@ -299,29 +299,29 @@ dl.samples > dd
 
 /* Used on inline samples */
 
-.cke_editable h1,
-.cke_editable h2,
-.cke_editable h3,
-.cke_editable h4,
-.cke_editable h5,
-.cke_editable h6
+.contents h1,
+.contents h2,
+.contents h3,
+.contents h4,
+.contents h5,
+.contents h6
 {
 	font-weight: normal;
 	line-height: 1.2em;
 }
 
-.cke_editable a
+.contents a
 {
 	color: #0782C1;
 }
 
-.cke_editable hr
+.contents hr
 {
 	border: 0px;
 	border-top: 1px solid #ccc;
 }
 
-.cke_editable blockquote
+.contents blockquote
 {
 	font-style: italic;
 	font-family: Georgia, Times, "Times New Roman", serif;
@@ -331,40 +331,40 @@ dl.samples > dd
 	border-width: 0;
 }
 
-.cke_editable.cke_contents_ltr blockquote
+.contents.cke_contents_ltr blockquote
 {
 	padding-left: 20px;
 	padding-right: 8px;
 	border-left-width: 5px;
 }
 
-.cke_editable.cke_contents_rtl blockquote
+.contents.cke_contents_rtl blockquote
 {
 	padding-left: 8px;
 	padding-right: 20px;
 	border-right-width: 5px;
 }
 
-.cke_editable img.right {
+.contents img.right {
     border: 1px solid #ccc;
     float: right;
     margin-left: 15px;
     padding: 5px;
 }
 
-.cke_editable img.left {
+.contents img.left {
     border: 1px solid #ccc;
     float: left;
     margin-right: 15px;
     padding: 5px;
 }
 
-.cke_editable img:hover {
+.contents img:hover {
 	opacity: .9;
 	filter: alpha(opacity = 90);
 }
 
-.cke_editable pre
+.contents pre
 {
 	white-space: pre-wrap; /* CSS 2.1 */
 	word-wrap: break-word; /* IE7 */
