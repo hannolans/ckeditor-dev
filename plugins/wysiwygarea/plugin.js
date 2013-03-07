@@ -12,15 +12,8 @@
 	CKEDITOR.plugins.add( 'wysiwygarea', {
 		init: function( editor ) {
 			editor.addMode( 'wysiwyg', function( callback ) {
-				var iframe = CKEDITOR.document.createElement( 'iframe' );
-				iframe.setStyles({ width: '100%', height: '100%' } );
-				iframe.addClass( 'cke_wysiwyg_frame cke_reset' );
-
-				var contentSpace = editor.ui.space( 'contents' );
-				contentSpace.append( iframe );
-
 				var src = 'document.open();' +
-					// The document domain must be set any time we
+				// The document domain must be set any time we
 				// call document.open().
 				( isCustomDomain ? ( 'document.domain="' + document.domain + '";' ) : '' ) +
 					'document.close();';
@@ -31,6 +24,14 @@
 				src = CKEDITOR.env.air ? 'javascript:void(0)' : CKEDITOR.env.ie ? 'javascript:void(function(){' + encodeURIComponent( src ) + '}())'
 					:
 					'';
+
+				var iframe = CKEDITOR.dom.element.createFromHtml( '<iframe src="' + src + '"></iframe>', CKEDITOR.document );
+
+				iframe.setStyles( { width: '100%', height: '100%' } );
+				iframe.addClass( 'cke_wysiwyg_frame cke_reset' );
+
+				var contentSpace = editor.ui.space( 'contents' );
+				contentSpace.append( iframe );
 
 				// Asynchronous iframe loading is only required in IE>8 and Gecko (other reasons probably).
 				// Do not use it on WebKit as it'll break the browser-back navigation.
@@ -59,7 +60,6 @@
 					frameBorder: 0,
 					'aria-describedby' : labelId,
 					title: frameLabel,
-					src: src,
 					tabIndex: editor.tabIndex,
 					allowTransparency: 'true'
 				});
