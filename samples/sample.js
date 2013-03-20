@@ -7,6 +7,31 @@
 // This file can be ignored and is not required to make use of CKEditor.
 
 (function() {
+
+	var acfWarn;
+
+	CKEDITOR.on( 'instanceCreated', function( event ) {
+		// Insert a warning message when dataFiltered to let users know
+		// why rich content is different.
+		event.editor.once( 'dataFiltered', function() {
+			if ( acfWarn )
+				return;
+
+			var divs = CKEDITOR.document.getElementsByTag( 'div' ),
+				i = 0,
+				description;
+
+			while ( !( description = divs.getItem( i++ ) ).hasClass( 'description' ) );
+
+			( acfWarn = CKEDITOR.dom.element.createFromHtml(
+				'<p class="info">' +
+					'Editor contents in this sample may be limited due to <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">Advanced Content Filter (ACF)</a> configuration.<br> ' +
+					'To learn more about content filtering, please refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">ACF guide</a>.' +
+				'</p>'
+			) ).insertAfter( description );
+		});
+	});
+
 	// Check for sample compliance.
 	CKEDITOR.on( 'instanceReady', function( ev ) {
 		var editor = ev.editor,
@@ -22,9 +47,9 @@
 
 			if ( missing.length ) {
 				var warn = CKEDITOR.dom.element.createFromHtml(
-					'<div class="warning">' +
-						'<span>To fully experience this demo, the ' + missing.join( ', ' ) + ' plugin' + ( missing.length > 1 ? 's are' : ' is' ) + ' required.</span>' +
-					'</div>'
+					'<p class="info">' +
+						'To fully experience this demo, the ' + missing.join( ', ' ) + ' plugin' + ( missing.length > 1 ? 's are' : ' is' ) + ' required.' +
+					'</p>'
 				);
 				warn.insertBefore( editor.container );
 			}

@@ -15,18 +15,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 	<meta name="ckeditor-sample-name" content="Output for Flash">
 	<meta name="ckeditor-sample-group" content="Advanced Samples">
 	<meta name="ckeditor-sample-description" content="Configuring CKEditor to produce HTML code that can be used with Adobe Flash.">
-	<style>
-
-		.alert
-		{
-			background: #ffa84c;
-			padding: 10px 15px;
-			font-weight: bold;
-			display: block;
-			margin-bottom: 20px;
-		}
-
-	</style>
 </head>
 <body>
 	<h1 class="samples">
@@ -240,10 +228,12 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 					CKEDITOR.domReady( function() {
 						if ( !swfobject.hasFlashPlayerVersion( '8' ) ) {
-							CKEDITOR.dom.element.createFromHtml( '<span class="alert">' +
+							CKEDITOR.dom.element.createFromHtml(
+								'<p class="warning">' +
 									'At least Adobe Flash Player 8 is required to run this sample. ' +
 									'You can download it from <a href="http://get.adobe.com/flashplayer">Adobe\'s website</a>.' +
-								'</span>' ).insertBefore( editor.element );
+								'</p>'
+							).insertBefore( editor.element );
 						}
 
 						swfobject.embedSWF(
