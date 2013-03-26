@@ -10,6 +10,9 @@
 	// the current node and check it on successive requests. If there is any
 	// change on the tree, then the selectionChange event gets fired.
 	function checkSelectionChange() {
+		if ( this._.hardLockedSelection )
+			return;
+
 		// Editor may have no selection at all.
 		var sel = this.getSelection( 1 );
 		if ( sel.getType() == CKEDITOR.SELECTION_NONE )
@@ -545,8 +548,8 @@
 	 */
 	CKEDITOR.editor.prototype.getSelection = function( forceRealSelection ) {
 		// Check if there exists a locked selection.
-		if ( this._.savedSelection && !forceRealSelection )
-			return this._.savedSelection;
+		if ( ( this._.hardLockedSelection || this._.savedSelection ) && !forceRealSelection )
+			return this._.hardLockedSelection || this._.savedSelection;
 
 		// Editable element might be absent.
 		var editable = this.editable();
@@ -594,6 +597,24 @@
 		}
 
 		return false;
+	};
+
+	CKEDITOR.editor.prototype.lockHardSelection = function( sel ) {
+		sel = sel || this.getSelection( 1 );
+
+		if ( sel.getType() != CKEDITOR.SELECTION_NONE ) {
+			sel.lockHard();
+			this._.hardLockedSelection = sel;
+		}
+	};
+
+	CKEDITOR.editor.prototype.unlockHardSelection = function() {
+		var sel = this._.hardLockedSelection;
+
+		if ( sel ) {
+			sel.unlockHard();
+			delete this._.hardLockedSelection;
+		}
 	};
 
 	/**
@@ -1286,6 +1307,9 @@
 		 *		editor.getSelection().lock();
 		 */
 		lock: function() {
+			if ( this.isHardLocked )
+				return;
+
 			// Call all cacheable function.
 			this.getRanges();
 			this.getStartElement();
@@ -1298,11 +1322,16 @@
 			this.isLocked = 1;
 		},
 
+		lockHard: function() {
+			this.lock();
+			this.isHardLocked = 1;
+		},
+
 		/**
 		 * @todo
 		 */
 		unlock: function( restore ) {
-			if ( !this.isLocked )
+			if ( !this.isLocked || this.isHardLocked )
 				return;
 
 			if ( restore ) {
@@ -1327,12 +1356,20 @@
 			}
 		},
 
+		unlockHard: function() {
+			this.isHardLocked = 0;
+			this.unlock();
+		},
+
 		/**
 		 * Clears the selection cache.
 		 *
 		 *		editor.getSelection().reset();
 		 */
 		reset: function() {
+			if ( this.isHardLocked )
+				return;
+
 			this._.cache = {};
 		},
 
@@ -1364,6 +1401,9 @@
 		 */
 		selectRanges: function( ranges ) {
 			if ( !ranges.length )
+				return;
+
+			if ( this.isHardLocked )
 				return;
 
 			// Refresh the locked selection.
@@ -1678,6 +1718,9 @@
 		 * Remove all the selection ranges from the document.
 		 */
 		removeAllRanges: function() {
+			if ( this.isHardLocked )
+				return;
+
 			var nativ = this.getNative();
 
 			try { nativ && nativ[ isMSSelection ? 'empty' : 'removeAllRanges' ](); }
