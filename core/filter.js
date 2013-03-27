@@ -1142,13 +1142,23 @@
 			else {
 				// We don't need elements validator for this kind of rule.
 				var elements = rule.elements;
-				delete rule.elements;
 
 				for ( element in elements ) {
-					if ( !elementsRules[ element ] )
-						elementsRules[ element ] = [ rule ];
-					else
-						elementsRules[ element ][ priority ? 'unshift' : 'push' ]( rule );
+					// Check for element names *not* containing regex patterns.
+					if ( element.match( '^[a-z0-9]+$' ) ) {
+						delete rule.elements;
+
+						if ( !elementsRules[ element ] )
+							elementsRules[ element ] = [ rule ];
+						else
+							elementsRules[ element ][ priority ? 'unshift' : 'push' ]( rule );
+					}
+					// If element name contains regex pattern, validate it.
+					else {
+						rule.elements = validatorFunction( rule.elements );
+						// Add priority rules at the beginning.
+						genericRules[ priority ? 'unshift' : 'push' ]( rule );
+					}
 				}
 			}
 		}
@@ -1342,8 +1352,15 @@
 		if ( validator === true )
 			return true;
 
+		var regex = '';
+
+		for ( var key in validator )
+			regex += ( !regex.length ? '' : '|' ) + '(' + key.replace( /\*/g, '.*' ) + ')';
+
+		regex = new RegExp( '^' + regex + '$' );
+
 		return function( value ) {
-			return value in validator;
+			return regex.test( value );
 		};
 	}
 
