@@ -1,0 +1,17 @@
+div.fake {
+	border: solid 2px blue;
+	padding: 40px 20px;
+	margin: 10px;
+}
+
+div.fake.focused {
+	border-color: yellow;
+}
+
+div.hiddenSelection {
+	background: yellow;
+	padding: 5px;
+	position: fixed;
+	right: 0;
+	top: 0;
+}

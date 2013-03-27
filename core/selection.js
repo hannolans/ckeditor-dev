@@ -602,6 +602,13 @@
 	CKEDITOR.editor.prototype.lockHardSelection = function( sel ) {
 		sel = sel || this.getSelection( 1 );
 
+		// If locking new selection, check it.
+		var currentPath = this.elementPath( sel.getStartElement() );
+		if ( !currentPath.compare( this._.selectionPreviousPath ) ) {
+			this._.selectionPreviousPath = currentPath;
+			this.fire( 'selectionChange', { selection: sel, path: currentPath } );
+		}
+
 		if ( sel.getType() != CKEDITOR.SELECTION_NONE ) {
 			sel.lockHard();
 			this._.hardLockedSelection = sel;
