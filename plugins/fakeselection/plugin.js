@@ -38,7 +38,8 @@
 		// Block all keys. They need to be handled by custom code.
 		this._.keydownListener = this.root.on( 'keydown', function( evt ) {
 			evt.data.preventDefault();
-		} );
+			evt.cancel();
+		}, null, null, 0 );
 
 		// Catch selection after focus has been brought back to editable.
 		// Need to do that only on browsers that uses selection locking.
