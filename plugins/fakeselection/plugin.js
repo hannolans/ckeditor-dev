@@ -39,6 +39,14 @@
 		this._.keydownListener = this.root.on( 'keydown', function( evt ) {
 			evt.data.preventDefault();
 		} );
+
+		// Catch selection after focus has been brought back to editable.
+		// Need to do that only on browsers that uses selection locking.
+		if ( CKEDITOR.env.ie ) {
+			this._.focusListener = this.root.on( 'focus', function() {
+					this.update();
+			}, this );
+		}
 	}
 
 	CKEDITOR.dom.fakeSelection = fakeSelection;
@@ -53,6 +61,7 @@
 		destroy: function() {
 			this._.hiddenEl.remove();
 			this._.keydownListener.removeListener();
+			this._.focusListener && this._.focusListener.removeListener();
 		},
 
 		update: function() {

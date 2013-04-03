@@ -50,8 +50,6 @@ function initFake( editor, el ) {
 		evt.data.preventDefault();
 	} );
 
-	editor.on( 'blur', blurFake );
-
 	function focusFake() {
 		if ( focused ) {
 			// Move true selection back to hidden el, when clicked fake object 2nd time.
