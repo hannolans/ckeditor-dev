@@ -24,15 +24,24 @@ function onLoaded( evt ) {
 }
 
 function initFake( editor, el ) {
-	var focused = false;
+	var focused = false,
+		targetDown = null;
 
 	el.setAttribute( 'contenteditable', 'false' );
 
+	editor.editable().on( 'mousedown', function( evt ) {
+		targetDown = evt.data.getTarget();
+	} );
+
 	editor.editable().on( 'mouseup', function( evt ) {
-		if ( el.equals( evt.data.getTarget() ) )
+		// Start or end of selection is placed inside widget - select it.
+		// Including both cases we prevent having selection anchored in widget.
+		if ( el.equals( evt.data.getTarget() ) || el.equals( targetDown ) )
 			focusFake( editor, el );
 		else
 			blurFake( editor, el );
+
+		targetDown = null;
 	} );
 
 	// Dear FF, you suck!
