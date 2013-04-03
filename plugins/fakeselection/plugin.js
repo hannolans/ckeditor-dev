@@ -34,6 +34,11 @@
 		this._.hiddenEl = hiddenEl;
 
 		this.update();
+
+		// Block all keys. They need to be handled by custom code.
+		this._.keydownListener = this.root.on( 'keydown', function( evt ) {
+			evt.data.preventDefault();
+		} );
 	}
 
 	CKEDITOR.dom.fakeSelection = fakeSelection;
@@ -47,6 +52,7 @@
 
 		destroy: function() {
 			this._.hiddenEl.remove();
+			this._.keydownListener.removeListener();
 		},
 
 		update: function() {
