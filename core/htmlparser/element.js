@@ -156,6 +156,10 @@ CKEDITOR.htmlParser.cssStyle = function() {
 		 * position in parent's children array.
 		 */
 		filter: function( filter ) {
+			if ( this.filteredBy == filter.id )
+				return true;
+			this.filteredBy = filter.id;
+
 			var element = this,
 				originalName, name;
 

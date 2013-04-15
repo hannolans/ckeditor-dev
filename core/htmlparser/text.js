@@ -47,6 +47,10 @@
 		 * that it has to repeat filter on current position in parent's children array.
 		 */
 		filter: function( filter ) {
+			if ( this.filteredBy == filter.id )
+				return true;
+			this.filteredBy = filter.id;
+
 			if ( !( this.value = filter.onText( this.value, this ) ) ) {
 				this.remove();
 				return false;

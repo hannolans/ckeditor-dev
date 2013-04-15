@@ -47,6 +47,10 @@ CKEDITOR.htmlParser.comment.prototype = CKEDITOR.tools.extend( new CKEDITOR.html
 	 * to repeat filter on current position in parent's children array.
 	 */
 	filter: function( filter ) {
+		if ( this.filteredBy == filter.id )
+			return true;
+		this.filteredBy = filter.id;
+
 		var comment = this.value;
 
 		if ( !( comment = filter.onComment( comment, this ) ) ) {

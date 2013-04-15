@@ -493,6 +493,10 @@ CKEDITOR.htmlParser.fragment = function() {
 		 * @param {CKEDITOR.htmlParser.filter} filter
 		 */
 		filter: function( filter ) {
+			if ( this.filteredBy == filter.id )
+				return true;
+			this.filteredBy = filter.id;
+
 			// Apply the root filter.
 			filter.onRoot( this );
 
@@ -510,20 +514,9 @@ CKEDITOR.htmlParser.fragment = function() {
 		 * @param {Boolean} [filterRoot] Whether to apply the "root" filter rule specified in the `filter`.
 		 */
 		filterChildren: function( filter, filterRoot ) {
-			// If this element's children were already filtered
-			// by current filter, don't filter them 2nd time.
-			// This situation may occur when filtering bottom-up
-			// (filterChildren() called manually in element's filter),
-			// or in unpredictable edge cases when filter
-			// is manipulating DOM structure.
-			if ( this.childrenFilteredBy == filter.id )
-				return;
-
 			// Filtering root if enforced.
 			if ( filterRoot && !this.parent )
 				filter.onRoot( this );
-
-			this.childrenFilteredBy = filter.id;
 
 			// Don't cache anything, children array may be modified by filter rule.
 			for ( var i = 0; i < this.children.length; i++ ) {
