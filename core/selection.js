@@ -6,6 +6,16 @@
 (function() {
 	// #### checkSelectionChange : START
 
+	/**
+	 * @event selectionChange
+	 *
+	 * @member CKEDITOR.editor
+	 * @param {CKEDITOR.editor} editor This editor instance.
+	 * @param data
+	 * @param {CKEDITOR.dom.selection} data.selection
+	 * @param {CKEDITOR.dom.elementPath} data.path
+	 */
+
 	// The selection change check basically saves the element parent tree of
 	// the current node and check it on successive requests. If there is any
 	// change on the tree, then the selectionChange event gets fired.
@@ -182,17 +192,6 @@
 	// Setup all editor instances for the necessary selection hooks.
 	CKEDITOR.on( 'instanceCreated', function( ev ) {
 		var editor = ev.editor;
-
-		/**
-		 * @event selectionChange
-		 *
-		 * @member CKEDITOR.editor
- 		 * @param {CKEDITOR.editor} editor This editor instance.
- 		 * @param data
- 		 * @param {CKEDITOR.dom.selection} data.selection
- 		 * @param {CKEDITOR.dom.elementPath} data.path
-		 */
-		editor.define( 'selectionChange', { errorProof:1 } );
 
 		editor.on( 'contentDom', function() {
 			var doc = editor.document,

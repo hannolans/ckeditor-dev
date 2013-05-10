@@ -86,7 +86,7 @@ if ( !CKEDITOR.event ) {
 			 *
 			 * @param {String} name The event name
 			 * @param meta
-			 * @param [meta.errorProof=false] Whether the event firing should catch error thrown from a per listener call.
+			 * @param [meta.errorProof=false] **(Deprecated)** Whether the event firing should catch error thrown from a per listener call.
 			 */
 			define: function( name, meta ) {
 				var entry = getEntry.call( this, name );
