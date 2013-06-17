@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<title>Drupal: Image Caption Plugin</title>
+	<meta charset="utf-8">
+	<script src="../../../ckeditor.js"></script>
+	<script src="theme.js"></script>
+	<link href="../../../samples/sample.css" rel="stylesheet">
+</head>
+<body>
+	<h1 class="samples">
+		Drupal: Image Caption Plugin
+	</h1>
+
+	<textarea id="editor1" cols="10" rows="10">
+		<p>Old <code>&amp;lt;img src="..."&amp;gt;</code> inline element:<br>
+			Text before
+			<img src="../../../samples/assets/sample.jpg">
+			and after the image.
+		</p>
+
+		<hr style="clear: both">
+
+		<p>New <code>&amp;lt;img src="..." data-align="left"&amp;gt;</code> element:</p>
+		<img src="../../../samples/assets/sample.jpg" data-align="left" data-caption="Image aligned left">
+		<p>This is some text following the image.</p>
+
+		<hr style="clear: both">
+
+		<p>New <code>&amp;lt;img src="..." data-align="center"&amp;gt;</code> element:</p>
+		<img src="../../../samples/assets/sample.jpg" data-align="center" data-caption="Centered Image">
+		<p>This is some text following the image.</p>
+
+		<hr style="clear: both">
+
+		<p>New <code>&amp;lt;img src="..." data-align="right"&amp;gt;</code> element:</p>
+		<img src="../../../samples/assets/sample.jpg" data-align="right" data-caption="Image aligned right">
+		<p>This is some text following the image.</p>
+
+		<hr style="clear: both">
+
+		<p>New <code>&amp;lt;img src="..." &amp;gt;</code> element:</p>
+		<img src="../../../samples/assets/sample.jpg" data-caption="Image with caption only">
+		<p>This is some text following the image.</p>
+
+		<hr style="clear: both">
+
+		<p>New <code>&amp;lt;img src="..." data-align="right"&amp;gt;</code> element (no caption):</p>
+		<img src="../../../samples/assets/sample.jpg" data-align="right">
+		<p>This is some text following the image.</p>
+
+	</textarea>
+
+	<script>
+
+		var editor = CKEDITOR.replace( 'editor1', {
+			extraPlugins: 'drupal_imagecaption',
+			extraAllowedContent: 'hr{clear}',
+			height: 400
+		} );
+
+	</script>
+</body>
+</html>
