@@ -3,7 +3,7 @@
 
 // To enable this, just add ?theme to the URL.
 
-if ( document.location.search == '?theme' ) {
+if ( document.location.search != '?notheme' ) {
 
 	// Added this here for simplicity, but this is a sample CSS to be added
 	// by the theme into the editor contents area (contents.css).
