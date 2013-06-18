@@ -9,11 +9,19 @@ CKEDITOR.plugins.add( 'drupal_imagecaption', {
 	// Requires the "widget" plugin, which provides the Widgets System API.
 	requires: 'widget',
 
+	icons: 'widgetimagecaption',
+
 	init: function( editor ) {
 		// Register the widget with a unique name "imagecaption".
 		editor.widgets.add( 'imagecaption', {
 			// ACF rules.
 			allowedContent: 'img[!src,data-align,data-caption]{float}',
+
+			button: 'Captioned image',
+
+			// The template used for new images insertion.
+			// TODO: No "data-widget" should be required here.
+			template: '<img src="' + editor.plugins.drupal_imagecaption.path + 'images/empty.png" data-widget="imagecaption" />',
 
 			parts: {
 				image: 'img'
