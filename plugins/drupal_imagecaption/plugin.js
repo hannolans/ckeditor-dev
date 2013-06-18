@@ -76,7 +76,7 @@ CKEDITOR.plugins.add( 'drupal_imagecaption', {
 
 			// Convert the element back to its desired output representation.
 			downcast: function( el ) {
-				if ( this.data.caption )
+				if ( this.data.caption && !this.data.nocaption )
 					el.attributes[ 'data-caption' ] = this.data.caption;
 
 				if ( this.data.align )
