@@ -59,8 +59,17 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 		var editor = CKEDITOR.replace( 'editor1', {
 			extraPlugins: 'drupal_imagecaption',
-			extraAllowedContent: 'hr{clear}',
+			extraAllowedContent: 'hr{clear}',		// Just for sample purposes.
 			height: 400
+		} );
+
+		// Toggle the caption on double click.
+		editor.on( 'doubleclick', function() {
+			var widget = editor.widgets.focused;
+
+			if ( widget && widget.name == 'imagecaption' ) {
+				widget.setData( 'nocaption', !widget.data.nocaption );
+			}
 		} );
 
 	</script>
