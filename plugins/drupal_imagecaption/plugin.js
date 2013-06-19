@@ -20,8 +20,7 @@ CKEDITOR.plugins.add( 'drupal_imagecaption', {
 			button: 'Captioned image',
 
 			// The template used for new images insertion.
-			// TODO: No "data-widget" should be required here.
-			template: '<img src="' + editor.plugins.drupal_imagecaption.path + 'images/empty.png" data-widget="imagecaption" />',
+			template: '<img src="' + editor.plugins.drupal_imagecaption.path + 'images/empty.png" />',
 
 			parts: {
 				image: 'img'

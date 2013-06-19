@@ -36,7 +36,7 @@ if ( document.location.search != '?notheme' ) {
 
 				// The template used for new images insertion.
 				widgetDef.template =
-					'<figure class="imagecaption" data-widget="imagecaption">' +	// TODO: No "data-widget" should be required here.
+					'<figure class="imagecaption">' +
 						'<img src="' + editor.plugins.drupal_imagecaption.path + 'images/empty.png" data-caption="Caption" />' +
 						'<figcaption>Caption</figcaption>' +
 					'</figure>';
