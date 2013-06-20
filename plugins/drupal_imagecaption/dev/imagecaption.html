@@ -81,15 +81,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 			height: 400
 		} );
 
-		// Toggle the caption on double click.
-		editor.on( 'doubleclick', function() {
-			var widget = editor.widgets.focused;
-
-			if ( widget && widget.name == 'imagecaption' ) {
-				widget.setData( 'nocaption', !widget.data.nocaption );
-			}
-		} );
-
 	</script>
 </body>
 </html>
