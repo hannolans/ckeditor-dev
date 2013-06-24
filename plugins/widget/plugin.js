@@ -1442,6 +1442,9 @@
 
 		widget.wrapper.removeClass( 'cke_widget_new' );
 		widget.element.addClass( 'cke_widget_element' );
+		// Always set data-widget on element. It may not be set
+		// if e.g. instantiating widget on dynamically created element.
+		widget.element.data( 'widget', widget.name );
 
 		widget.on( 'key', function( evt ) {
 			if ( evt.data.keyCode == 13 ) {
