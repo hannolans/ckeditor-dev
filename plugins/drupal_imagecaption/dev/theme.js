@@ -56,8 +56,40 @@ if ( document.location.search != '?notheme' ) {
 						// Call the original "data" implementation.
 						originalDataFn.apply( this, arguments );
 
-						// Set the caption visibility.
-						this.parts.caption.setStyle( 'display', this.data.nocaption ? 'none' : '' );
+						var widget = this;
+
+						setTimeout( function() {
+							if ( widget.element.is( 'figure' ) && widget.data.nocaption ) {
+								editor.widgets.destroy( widget );
+								editor.widgets.once( 'instanceCreated', function( evt ) {
+									evt.data.on( 'ready', function() {
+										this.setData( widget.data );
+									} );
+								} );
+
+								widget.parts.image.replace( widget.element );
+
+								editor.widgets.initOn( widget.parts.image, 'imagecaption' );
+								return;
+							}
+
+							if ( widget.element.is( 'img' ) && !widget.data.nocaption ) {
+								editor.widgets.destroy( widget );
+								editor.widgets.once( 'instanceCreated', function( evt ) {
+									evt.data.on( 'ready', function() {
+										this.setData( widget.data );
+									} );
+								} );
+
+								var figure = CKEDITOR.dom.element.createFromHtml( widget.template.output(), editor.document );
+
+								figure.replace( widget.element );
+								widget.element.replace( figure.findOne( 'img' ) );
+
+								editor.widgets.initOn( figure, 'imagecaption' );
+								return;
+							}
+						} );
 					};
 				} );
 
@@ -98,6 +130,13 @@ if ( document.location.search != '?notheme' ) {
 						return originalDowncastFn.call( this, el ) || el;
 					};
 				} );
+
+				// Just a way to trigger nocaption change. It will be handled in
+				// #data listener.
+				widgetDef.edit = function( evt ) {
+					evt.cancel();
+					this.setData( 'nocaption', !this.data.nocaption );
+				};
 			}
 		} );
 	} );

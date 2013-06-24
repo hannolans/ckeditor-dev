@@ -130,22 +130,6 @@ CKEDITOR.plugins.add( 'drupal_imagecaption', {
 			downcast: function( el, widget ) {
 				if ( this.data.align )
 					el.setStyle( 'data-align', this.data.align );
-			},
-
-			// Called when widget is being edited (by doubleclick, enter key, toolbar button).
-			// Used here as a showcase how to transform widget into another one.
-			edit: function() {
-				var that = this;
-
-				// Listen on widget creation and copy data from the original widget to the new one.
-				editor.widgets.once( 'instanceCreated', function( evt ) {
-					evt.data.once( 'ready', function() {
-						this.setData( that.data );
-					} );
-				} );
-
-				// Insert imagecaption widget.
-				editor.execCommand( 'widgetImagecaption' );
 			}
 		} );
 	},
