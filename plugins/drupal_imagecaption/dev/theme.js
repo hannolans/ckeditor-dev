@@ -58,28 +58,24 @@ if ( document.location.search != '?notheme' ) {
 
 						var widget = this;
 
-						setTimeout( function() {
-							if ( widget.element.is( 'figure' ) && widget.data.nocaption ) {
-								editor.widgets.destroy( widget );
+						if ( widget.element.is( 'figure' ) && widget.data.nocaption ) {
+							editor.widgets.destroy( widget );
 
-								widget.parts.image.replace( widget.element );
+							widget.parts.image.replace( widget.element );
 
-								editor.widgets.initOn( widget.parts.image, 'imagecaption', widget.data );
-								return;
-							}
+							editor.widgets.initOn( widget.parts.image, 'imagecaption', widget.data );
+						}
+						else if ( widget.element.is( 'img' ) && !widget.data.nocaption ) {
+							editor.widgets.destroy( widget );
 
-							if ( widget.element.is( 'img' ) && !widget.data.nocaption ) {
-								editor.widgets.destroy( widget );
+							var figure = CKEDITOR.dom.element.createFromHtml( widget.template.output(), editor.document );
 
-								var figure = CKEDITOR.dom.element.createFromHtml( widget.template.output(), editor.document );
+							figure.replace( widget.element );
+							// Use our old image instead of one from template, so we won't lose additional attributes.
+							widget.element.replace( figure.findOne( 'img' ) );
 
-								figure.replace( widget.element );
-								widget.element.replace( figure.findOne( 'img' ) );
-
-								editor.widgets.initOn( figure, 'imagecaption', widget.data );
-								return;
-							}
-						} );
+							editor.widgets.initOn( figure, 'imagecaption', widget.data );
+						}
 					};
 				} );
 
@@ -89,16 +85,19 @@ if ( document.location.search != '?notheme' ) {
 						// Execute the original upcast first. If "true", this is an
 						// element to be upcasted.
 						if ( originalUpcastFn.apply( this, arguments ) ) {
-							var figure = el.wrapWith( new CKEDITOR.htmlParser.element( 'figure', { 'class': 'imagecaption' } ) ),
-								captionTxt = el.attributes[ 'data-caption' ] || '',
-								caption = CKEDITOR.htmlParser.fragment.fromHtml( captionTxt, 'figcaption' );
+							var captionTxt = el.attributes[ 'data-caption' ] || '';
 
-							if ( !captionTxt )
-								caption.attributes.style = 'display:none';
+							if ( captionTxt ) {
+								var figure = el.wrapWith( new CKEDITOR.htmlParser.element( 'figure', { 'class': 'imagecaption' } ) ),
+									caption = CKEDITOR.htmlParser.fragment.fromHtml( captionTxt, 'figcaption' );
 
-							figure.add( caption );
+								if ( !captionTxt )
+									caption.attributes.style = 'display:none';
 
-							return figure;
+								figure.add( caption );
+							}
+
+							return figure || el;
 						}
 					}
 				} );
@@ -106,14 +105,16 @@ if ( document.location.search != '?notheme' ) {
 				// Downcast <figure> back to <img>.
 				widgetDef.downcast = CKEDITOR.tools.override( widgetDef.downcast, function( originalDowncastFn ) {
 					return function( el ) {
-						// Update data with the current caption.
-						var caption = el.getFirst( 'figcaption' );
-						caption = caption ? caption.getHtml() : '';
-						this.data.caption = caption;
+						if ( el.name == 'figure' ) {
+							// Update data with the current caption.
+							var caption = el.getFirst( 'figcaption' );
+							caption = caption ? caption.getHtml() : '';
+							this.data.caption = caption;
 
-						// When downcasting, we'll take the <img> element in
-						// consideration, only.
-						el = el.getFirst( 'img' );
+							// When downcasting, we'll take the <img> element in
+							// consideration, only.
+							el = el.getFirst( 'img' );
+						}
 
 						// Call the original downcast to setup the <img>
 						// meta data accordingly.
