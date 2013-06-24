@@ -61,6 +61,7 @@ if ( document.location.search != '?notheme' ) {
 						if ( widget.element.is( 'figure' ) && widget.data.nocaption ) {
 							editor.widgets.destroy( widget );
 
+							// Unwrap image from figure.
 							widget.parts.image.replace( widget.element );
 
 							editor.widgets.initOn( widget.parts.image, 'imagecaption', widget.data );
@@ -68,9 +69,10 @@ if ( document.location.search != '?notheme' ) {
 						else if ( widget.element.is( 'img' ) && !widget.data.nocaption ) {
 							editor.widgets.destroy( widget );
 
+							// Create new figure element from template and replace image with it.
 							var figure = CKEDITOR.dom.element.createFromHtml( widget.template.output(), editor.document );
-
 							figure.replace( widget.element );
+
 							// Use our old image instead of one from template, so we won't lose additional attributes.
 							widget.element.replace( figure.findOne( 'img' ) );
 
@@ -87,12 +89,10 @@ if ( document.location.search != '?notheme' ) {
 						if ( originalUpcastFn.apply( this, arguments ) ) {
 							var captionTxt = el.attributes[ 'data-caption' ] || '';
 
+							// Wrap image with figure only if caption exists.
 							if ( captionTxt ) {
 								var figure = el.wrapWith( new CKEDITOR.htmlParser.element( 'figure', { 'class': 'imagecaption' } ) ),
 									caption = CKEDITOR.htmlParser.fragment.fromHtml( captionTxt, 'figcaption' );
-
-								if ( !captionTxt )
-									caption.attributes.style = 'display:none';
 
 								figure.add( caption );
 							}
