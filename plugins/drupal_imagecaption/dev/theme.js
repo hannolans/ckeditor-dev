@@ -61,32 +61,22 @@ if ( document.location.search != '?notheme' ) {
 						setTimeout( function() {
 							if ( widget.element.is( 'figure' ) && widget.data.nocaption ) {
 								editor.widgets.destroy( widget );
-								editor.widgets.once( 'instanceCreated', function( evt ) {
-									evt.data.on( 'ready', function() {
-										this.setData( widget.data );
-									} );
-								} );
 
 								widget.parts.image.replace( widget.element );
 
-								editor.widgets.initOn( widget.parts.image, 'imagecaption' );
+								editor.widgets.initOn( widget.parts.image, 'imagecaption', widget.data );
 								return;
 							}
 
 							if ( widget.element.is( 'img' ) && !widget.data.nocaption ) {
 								editor.widgets.destroy( widget );
-								editor.widgets.once( 'instanceCreated', function( evt ) {
-									evt.data.on( 'ready', function() {
-										this.setData( widget.data );
-									} );
-								} );
 
 								var figure = CKEDITOR.dom.element.createFromHtml( widget.template.output(), editor.document );
 
 								figure.replace( widget.element );
 								widget.element.replace( figure.findOne( 'img' ) );
 
-								editor.widgets.initOn( figure, 'imagecaption' );
+								editor.widgets.initOn( figure, 'imagecaption', widget.data );
 								return;
 							}
 						} );
