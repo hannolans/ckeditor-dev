@@ -128,6 +128,26 @@ if ( document.location.search != '?notheme' ) {
 					evt.cancel();
 					this.setData( 'nocaption', !this.data.nocaption );
 				};
+
+				widgetDef.insert = function() {
+					var tpl;
+
+					// Here we open dialog and handle returned values.
+					// If user chose to have caption we MUST create a figure,
+					// otherwise widget transformation will be triggered during
+					// widget creation what will throw errors.
+					if ( Math.random() > 0.5 )
+						tpl = this.template.output();
+					else
+						tpl = '<img src="../../../samples/assets/sample.jpg" data-align="right">';
+
+					var el = new CKEDITOR.dom.element.createFromHtml( tpl, editor.document );
+
+					editor.insertElement( editor.widgets.wrapElement( el, 'imagecaption' ) );
+
+					var widget = editor.widgets.initOn( el, 'imagecaption' );
+					widget.focus();
+				};
 			}
 		} );
 	} );
