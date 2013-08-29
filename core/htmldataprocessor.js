@@ -260,7 +260,8 @@
 		// Determinate whether this node is potentially a bogus node.
 		function maybeBogus( node, atBlockEnd ) {
 
-			if ( CKEDITOR.env.ie && node.name == 'br' )
+			// BR at the and of block in IE is not a bogus (#10378).
+			if ( CKEDITOR.env.ie && node.name == 'br' && atBlockEnd )
 				return false;
 
 			// BR that's not from IE DOM, except for a EOL marker.
