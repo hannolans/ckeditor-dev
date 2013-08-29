@@ -193,7 +193,7 @@
 				html = html.replace( /\n/g, '<br>' );
 
 				// Compensate padding <br> at the end of block, avoid loosing them during insertion.
-				if ( !isEnterBrMode ) {
+				if ( !CKEDITOR.env.ie && !isEnterBrMode ) {
 					html = html.replace( new RegExp( '<br>(?=</' + paragraphTag + '>)' ), function( match ) {
 						return tools.repeat( match, 2 );
 					});
