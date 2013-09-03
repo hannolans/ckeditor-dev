@@ -141,7 +141,9 @@ if ( !CKEDITOR.env ) {
 		 *
 		 * @property {Boolean}
 		 */
-		env.gecko = ( navigator.product == 'Gecko' && !env.webkit && !env.opera );
+		env.gecko = ( navigator.product == 'Gecko' && !env.webkit && !env.opera && agent.indexOf( 'trident/' ) == -1 );
+
+		env.newIE = ( navigator.product == 'Gecko' && agent.indexOf( 'trident/' ) > -1 );
 
 		/**
 		 * Indicates that CKEditor is running in Chrome.
@@ -275,6 +277,7 @@ if ( !CKEDITOR.env ) {
 				( env.opera && version >= 9.5 ) ||
 				( env.air && version >= 1 ) ||
 				( env.webkit && version >= 522 ) ||
+				( env.newIE ) ||
 				false
 			);
 
