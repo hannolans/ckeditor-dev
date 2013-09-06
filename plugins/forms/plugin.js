@@ -240,7 +240,7 @@ CKEDITOR.plugins.add( 'forms', {
 			dataFilter = dataProcessor && dataProcessor.dataFilter;
 
 		// Cleanup certain IE form elements default values.
-		if ( CKEDITOR.env.ie ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 			htmlFilter && htmlFilter.addRules({
 				elements: {
 					input: function( input ) {
@@ -269,7 +269,7 @@ CKEDITOR.plugins.add( 'forms', {
 	}
 });
 
-if ( CKEDITOR.env.ie ) {
+if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 	CKEDITOR.dom.element.prototype.hasAttribute = CKEDITOR.tools.override( CKEDITOR.dom.element.prototype.hasAttribute, function( original ) {
 		return function( name ) {
 			var $attr = this.$.attributes.getNamedItem( name );

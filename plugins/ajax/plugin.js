@@ -23,7 +23,7 @@
 		var createXMLHttpRequest = function() {
 				// In IE, using the native XMLHttpRequest for local files may throw
 				// "Access is Denied" errors.
-				if ( !CKEDITOR.env.ie || location.protocol != 'file:' )
+				if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || location.protocol != 'file:' )
 					try {
 					return new XMLHttpRequest();
 				} catch ( e ) {}

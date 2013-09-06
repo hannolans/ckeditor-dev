@@ -141,7 +141,7 @@
 				for ( var i = 0, ua; i < uas.length; i++ ) {
 					ua = uas[ i ];
 
-					if ( env.ie ) {
+					if ( env.ie && env.version <= 10 ) {
 						if ( ( ua.replace( /^ie/, '' ) == env.version ) || ( env.quirks && ua == 'iequirks' ) )
 							ua = 'ie';
 					}
@@ -181,9 +181,9 @@
 
 		/** Sets the color of the editor user interface. This method accepts a color value in
 		 * hexadecimal notation, with a `#` character (e.g. #ffffff).
-		 * 
+		 *
 		 * 		CKEDITOR.instances.editor1.setUiColor( '#ff00ff' );
-		 * 
+		 *
 		 * @method
 		 * @member CKEDITOR.editor
 		 * @param {String} color The desired editor UI color in hexadecimal notation.
@@ -244,7 +244,7 @@
 				for ( r = 0; r < replace.length; r++ )
 					content = content.replace( replace[ r ][ 0 ], replace[ r ][ 1 ] );
 
-				if ( CKEDITOR.env.ie )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 					styleNodes[ id ].$.styleSheet.cssText += content;
 				else
 					styleNodes[ id ].$.innerHTML += content;
@@ -254,7 +254,7 @@
 
 	CKEDITOR.on( 'instanceLoaded', function( evt ) {
 		// The chameleon feature is not for IE quirks.
-		if ( CKEDITOR.env.ie && CKEDITOR.env.quirks )
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks )
 			return;
 
 		var editor = evt.editor,

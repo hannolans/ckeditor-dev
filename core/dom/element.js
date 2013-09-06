@@ -310,7 +310,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @param {CKEDITOR.dom.node} node
 	 * @returns {Boolean}
 	 */
-	contains: CKEDITOR.env.ie || CKEDITOR.env.webkit ?
+	contains: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.webkit ?
 		function( node ) {
 			var $ = this.$;
 
@@ -356,7 +356,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	getHtml: function() {
 		var retval = this.$.innerHTML;
 		// Strip <?xml:namespace> tags in IE. (#3341).
-		return CKEDITOR.env.ie ? retval.replace( /<\?[^>]*>/g, '' ) : retval;
+		return ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? retval.replace( /<\?[^>]*>/g, '' ) : retval;
 	},
 
 	/**
@@ -472,7 +472,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				return this.$.getAttribute( name, 2 );
 			};
 
-		if ( CKEDITOR.env.ie && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie && ( CKEDITOR.env.version == 7 || CKEDITOR.env.ie6Compat ) ) {
 			return function( name ) {
 				switch ( name ) {
 					case 'class':
@@ -548,7 +548,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @param {String} propertyName The style property name.
 	 * @returns {String} The property value.
 	 */
-	getComputedStyle: CKEDITOR.env.ie ?
+	getComputedStyle: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
 		function( propertyName ) {
 			return this.$.currentStyle[ CKEDITOR.tools.cssStyleToDomStyle( propertyName ) ];
 		} : function( propertyName ) {
@@ -590,7 +590,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @method
 	 * @returns {Number} The tabindex value.
 	 */
-	getTabIndex: CKEDITOR.env.ie ?
+	getTabIndex: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
 		function() {
 			var tabIndex = this.$.tabIndex;
 
@@ -687,7 +687,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		// Cache the lowercased name inside a closure.
 		var nodeName = this.$.nodeName.toLowerCase();
 
-		if ( CKEDITOR.env.ie && !( document.documentMode > 8 ) ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && !( document.documentMode > 8 ) ) {
 			var scopeName = this.$.scopeName;
 			if ( scopeName != 'HTML' )
 				nodeName = scopeName.toLowerCase() + ':' + nodeName;
@@ -911,7 +911,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @method
 	 * @returns {Boolean} True if the element has attributes.
 	 */
-	hasAttributes: CKEDITOR.env.ie && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ?
+	hasAttributes: CKEDITOR.env.ie && ( CKEDITOR.env.version == 7 || CKEDITOR.env.ie6Compat ) ?
 		function() {
 			var attributes = this.$.attributes;
 
@@ -1097,7 +1097,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				return this;
 			};
 
-		if ( CKEDITOR.env.ie && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie && ( CKEDITOR.env.version == 7 || CKEDITOR.env.ie6Compat ) ) {
 			return function( name, value ) {
 				if ( name == 'class' )
 					this.$.className = value;
@@ -1174,7 +1174,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				this.$.removeAttribute( name );
 			};
 
-		if ( CKEDITOR.env.ie && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie && ( CKEDITOR.env.version == 7 || CKEDITOR.env.ie6Compat ) ) {
 			return function( name ) {
 				if ( name == 'class' )
 					name = 'className';
@@ -1299,7 +1299,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		// For IE/Opera which doesn't support for the above CSS style,
 		// the unselectable="on" attribute only specifies the selection
 		// process cannot start in the element itself, and it doesn't inherit.
-		if ( CKEDITOR.env.ie || CKEDITOR.env.opera ) {
+		if ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.opera ) {
 			this.setAttribute( 'unselectable', 'on' );
 
 			var element,
@@ -1361,7 +1361,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			//
 			// On other browsers, the top position of the <html> element is negative
 			// scrollTop.
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				var inDocElem = doc.getDocumentElement().contains( this ),
 					inBody = doc.getBody().contains( this );
 
@@ -1647,7 +1647,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			if ( attrName == 'checked' && ( attrValue = this.getAttribute( attrName ) ) )
 				dest.setAttribute( attrName, attrValue );
 			// IE BUG: value attribute is never specified even if it exists.
-			else if ( attribute.specified || ( CKEDITOR.env.ie && attribute.nodeValue && attrName == 'value' ) ) {
+			else if ( attribute.specified || ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && attribute.nodeValue && attrName == 'value' ) ) {
 				attrValue = this.getAttribute( attrName );
 				if ( attrValue === null )
 					attrValue = attribute.nodeValue;
@@ -1845,7 +1845,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 */
 	CKEDITOR.dom.element.prototype.setSize = function( type, size, isBorderBox ) {
 		if ( typeof size == 'number' ) {
-			if ( isBorderBox && !( CKEDITOR.env.ie && CKEDITOR.env.quirks ) )
+			if ( isBorderBox && !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks ) )
 				size -= marginAndPaddingSize.call( this, type );
 
 			this.setStyle( type, size + 'px' );

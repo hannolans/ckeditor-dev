@@ -38,7 +38,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 		' onkeydown="return CKEDITOR.tools.callFunction({keydownFn},event,this);"' +
 		' onmousedown="return CKEDITOR.tools.callFunction({mousedownFn},event);" ' +
 		' onfocus="return CKEDITOR.tools.callFunction({focusFn},event);" ' +
-			( CKEDITOR.env.ie ? 'onclick="return false;" onmouseup' : 'onclick' ) + // #188
+			( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'onclick="return false;" onmouseup' : 'onclick' ) + // #188
 				'="CKEDITOR.tools.callFunction({clickFn},this);return false;">' +
 			'<span id="{id}_text" class="cke_combo_text cke_combo_inlinelabel">{label}</span>' +
 			'<span class="cke_combo_open">' +

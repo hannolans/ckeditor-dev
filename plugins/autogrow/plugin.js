@@ -16,7 +16,7 @@
 		var doc = scrollable.getDocument();
 		// Create a temporary marker element.
 		var marker = CKEDITOR.dom.element.createFromHtml( '<span style="margin:0;padding:0;border:0;clear:both;width:1px;height:1px;display:block;">' + ( CKEDITOR.env.webkit ? '&nbsp;' : '' ) + '</span>', doc );
-		doc[ CKEDITOR.env.ie ? 'getBody' : 'getDocumentElement' ]().append( marker );
+		doc[ ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'getBody' : 'getDocumentElement' ]().append( marker );
 
 		var height = marker.getDocumentPosition( doc ).y + marker.$.offsetHeight;
 		marker.remove();

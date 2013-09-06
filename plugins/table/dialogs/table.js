@@ -57,7 +57,7 @@
 		return {
 			title: editor.lang.table.title,
 			minWidth: 310,
-			minHeight: CKEDITOR.env.ie ? 310 : 280,
+			minHeight: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 310 : 280,
 
 			onLoad: function() {
 				var dialog = this;
@@ -147,7 +147,7 @@
 							var row = tbody.append( makeElement( 'tr' ) );
 							for ( var j = 0; j < cols; j++ ) {
 								var cell = row.append( makeElement( 'td' ) );
-								if ( !CKEDITOR.env.ie )
+								if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
 									cell.append( makeElement( 'br' ) );
 							}
 						}

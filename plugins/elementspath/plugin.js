@@ -19,7 +19,7 @@
 
 				// Make the first button focus accessible for IE. (#3417)
 				// Adobe AIR instead need while of delay.
-				element && element.focus( CKEDITOR.env.ie || CKEDITOR.env.air );
+				element && element.focus( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.air );
 			}
 		}
 	};

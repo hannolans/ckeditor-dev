@@ -36,7 +36,7 @@
 
 					// Make the first button focus accessible for IE. (#3417)
 					// Adobe AIR instead need while of delay.
-					if ( CKEDITOR.env.ie || CKEDITOR.env.air )
+					if ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.air )
 						setTimeout( function() {
 						editor.toolbox.focus();
 					}, 100 );
@@ -340,7 +340,7 @@
 						modes: { wysiwyg:1,source:1 }
 					});
 
-					editor.setKeystroke( CKEDITOR.ALT + ( CKEDITOR.env.ie || CKEDITOR.env.webkit ? 189 : 109 ) /*-*/, 'toolbarCollapse' );
+					editor.setKeystroke( CKEDITOR.ALT + ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.webkit ? 189 : 109 ) /*-*/, 'toolbarCollapse' );
 
 					output.push( '<a title="' + ( expanded ? editor.lang.toolbar.toolbarCollapse : editor.lang.toolbar.toolbarExpand )
 						+ '" id="' + editor.ui.spaceId( 'toolbar_collapser' )

@@ -133,7 +133,7 @@
 		return {
 			title: editor.lang.templates.title,
 
-			minWidth: CKEDITOR.env.ie ? 440 : 400,
+			minWidth: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 440 : 400,
 			minHeight: 340,
 
 			contents: [

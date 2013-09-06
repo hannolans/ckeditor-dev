@@ -307,7 +307,7 @@
 				var lastChild = block.getLast();
 				if ( lastChild && lastChild.type == CKEDITOR.NODE_ELEMENT && lastChild.getName() == 'br' ) {
 					// Take care not to remove the block expanding <br> in non-IE browsers.
-					if ( CKEDITOR.env.ie || lastChild.getPrevious( bookmarkGuard ) || lastChild.getNext( bookmarkGuard ) )
+					if ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || lastChild.getPrevious( bookmarkGuard ) || lastChild.getNext( bookmarkGuard ) )
 						lastChild.remove();
 				}
 			}

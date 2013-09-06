@@ -8,7 +8,7 @@ CKEDITOR.dialog.add( 'about', function( editor ) {
 		imagePath = CKEDITOR.plugins.get( 'about' ).path + 'dialogs/' + ( CKEDITOR.env.hidpi ? 'hidpi/' : '' ) + 'logo_ckeditor.png';
 
 	return {
-		title: CKEDITOR.env.ie ? lang.dlgTitle : lang.title,
+		title: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? lang.dlgTitle : lang.title,
 		minWidth: 390,
 		minHeight: 230,
 		contents: [

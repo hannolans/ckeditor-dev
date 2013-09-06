@@ -76,7 +76,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 *			// You can also customize the editor instance by having the function
 	 *			// modify the "config" parameter.
 	 *		} );
-	 * 
+	 *
 	 * @param {String} [className] The `<textarea>` class name.
 	 * @param {Function} [function] An assertion function that must return `true` for a `<textarea>`
 	 * to be replaced with the editor. If the function returns `false`, the `<textarea>` element
@@ -345,7 +345,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 			topHtml: topHtml ? '<span id="' + editor.ui.spaceId( 'top' ) + '" class="cke_top cke_reset_all" role="presentation" style="height:auto">' + topHtml + '</span>' : '',
 			contentId: editor.ui.spaceId( 'contents' ),
 			bottomHtml: bottomHtml ? '<span id="' + editor.ui.spaceId( 'bottom' ) + '" class="cke_bottom cke_reset_all" role="presentation">' + bottomHtml + '</span>' : '',
-			outerEl: CKEDITOR.env.ie ? 'span' : 'div'	// #9571
+			outerEl: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'span' : 'div'	// #9571
 		}));
 
 		if ( elementMode == CKEDITOR.ELEMENT_MODE_REPLACE ) {

@@ -13,7 +13,7 @@ CKEDITOR.dialog.add( 'select', function( editor ) {
 			oOption = document.createElement( "OPTION" );
 
 		if ( combo && oOption && oOption.getName() == 'option' ) {
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				if ( !isNaN( parseInt( index, 10 ) ) )
 					combo.$.options.add( oOption.$, index );
 				else
@@ -122,8 +122,8 @@ CKEDITOR.dialog.add( 'select', function( editor ) {
 
 	return {
 		title: editor.lang.forms.select.title,
-		minWidth: CKEDITOR.env.ie ? 460 : 395,
-		minHeight: CKEDITOR.env.ie ? 320 : 300,
+		minWidth: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 460 : 395,
+		minHeight: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 320 : 300,
 		onShow: function() {
 			delete this.selectBox;
 			this.setupContent( 'clear' );
@@ -149,7 +149,7 @@ CKEDITOR.dialog.add( 'select', function( editor ) {
 
 			if ( isInsertMode ) {
 				editor.insertElement( element );
-				if ( CKEDITOR.env.ie ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 					var sel = editor.getSelection(),
 						bms = sel.createBookmarks();
 					setTimeout( function() {

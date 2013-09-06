@@ -191,7 +191,7 @@
 				selection = contents && editor.getSelection();
 
 			// In IE, we need to remove the expando attributes.
-			CKEDITOR.env.ie && contents && ( contents = contents.replace( /\s+data-cke-expando=".*?"/g, '' ) );
+			CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && contents && ( contents = contents.replace( /\s+data-cke-expando=".*?"/g, '' ) );
 
 			this.contents = contents;
 			this.bookmarks = selection && selection.createBookmarks2( true );
@@ -208,7 +208,7 @@
 				otherContents = otherImage.contents;
 
 			// For IE6/7 : Comparing only the protected attribute values but not the original ones.(#4522)
-			if ( CKEDITOR.env.ie && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+			if ( CKEDITOR.env.ie && ( CKEDITOR.env.version == 7 || CKEDITOR.env.ie6Compat ) ) {
 				thisContents = thisContents.replace( protectedAttrs, '' );
 				otherContents = otherContents.replace( protectedAttrs, '' );
 			}
@@ -297,7 +297,7 @@
 					var currentSnapshot = editor.getSnapshot();
 
 					// In IE, we need to remove the expando attributes.
-					if ( CKEDITOR.env.ie )
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 						currentSnapshot = currentSnapshot.replace( /\s+data-cke-expando=".*?"/g, '' );
 
 					// If changes have taken place, while not been captured yet (#8459),
@@ -468,7 +468,7 @@
 
 			if ( image.bookmarks )
 				sel.selectBookmarks( image.bookmarks );
-			else if ( CKEDITOR.env.ie ) {
+			else if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				// IE BUG: If I don't set the selection to *somewhere* after setting
 				// document contents, then IE would create an empty paragraph at the bottom
 				// the next time the document is modified.

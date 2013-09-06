@@ -62,7 +62,7 @@
 				return false;
 
 			var sOpenUrl = '';
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				window._cke_htmlToLoad = eventData.dataValue;
 				sOpenUrl = 'javascript:void( (function(){' +
 					'document.open();' +
@@ -85,7 +85,7 @@
 			var oWindow = window.open( sOpenUrl, null, 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
 				iWidth + ',height=' + iHeight + ',left=' + iLeft );
 
-			if ( !CKEDITOR.env.ie && !CKEDITOR.env.gecko ) {
+			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && !CKEDITOR.env.gecko ) {
 				var doc = oWindow.document;
 				doc.open();
 				doc.write( eventData.dataValue );

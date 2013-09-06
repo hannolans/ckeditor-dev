@@ -28,7 +28,7 @@ if ( !CKEDITOR.env ) {
 			 *
 			 * @property {Boolean}
 			 */
-			ie: eval( '/*@cc_on!@*/false' ),
+			ie: eval( '/*@cc_on!@*/false' ) || ( navigator.product == 'Gecko' && agent.indexOf( 'trident/' ) > -1 ),
 			// Use eval to preserve conditional comment when compiling with Google Closure Compiler (#93).
 
 			/**
@@ -143,8 +143,6 @@ if ( !CKEDITOR.env ) {
 		 */
 		env.gecko = ( navigator.product == 'Gecko' && !env.webkit && !env.opera && agent.indexOf( 'trident/' ) == -1 );
 
-		env.newIE = ( navigator.product == 'Gecko' && agent.indexOf( 'trident/' ) > -1 );
-
 		/**
 		 * Indicates that CKEditor is running in Chrome.
 		 *
@@ -174,7 +172,9 @@ if ( !CKEDITOR.env ) {
 		// Internet Explorer 6.0+
 		if ( env.ie ) {
 			// We use env.version for feature detection, so set it properly.
-			if ( env.quirks || !document.documentMode )
+			if ( navigator.product == 'Gecko' )
+				version = parseFloat( agent.match( /rv:([\d\.]+)/ )[ 1 ] );
+			else if ( env.quirks || !document.documentMode )
 				version = parseFloat( agent.match( /msie (\d+)/ )[ 1 ] );
 			else
 				version = document.documentMode;
@@ -277,7 +277,6 @@ if ( !CKEDITOR.env ) {
 				( env.opera && version >= 9.5 ) ||
 				( env.air && version >= 1 ) ||
 				( env.webkit && version >= 522 ) ||
-				( env.newIE ) ||
 				false
 			);
 

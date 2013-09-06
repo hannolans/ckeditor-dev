@@ -52,7 +52,7 @@
 				// 1. The textarea height/width='100%' doesn't constraint to the 'td' in IE6/7.
 				// 2. Unexpected vertical-scrolling behavior happens whenever focus is moving out of editor
 				// if text content within it has overflowed. (#4762)
-				if ( CKEDITOR.env.ie ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 					editable.attachListener( editor, 'resize', onResize, editable );
 					editable.attachListener( CKEDITOR.document.getWindow(), 'resize', onResize, editable );
 					CKEDITOR.tools.setTimeout( onResize, 0, editable );

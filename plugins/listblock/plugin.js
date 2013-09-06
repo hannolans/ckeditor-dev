@@ -45,8 +45,8 @@ CKEDITOR.plugins.add( 'listblock', {
 				keys[ 9 ] = 'next'; // TAB
 				keys[ 38 ] = 'prev'; // ARROW-UP
 				keys[ CKEDITOR.SHIFT + 9 ] = 'prev'; // SHIFT + TAB
-				keys[ 32 ] = CKEDITOR.env.ie ? 'mouseup' : 'click'; // SPACE
-				CKEDITOR.env.ie && ( keys[ 13 ] = 'mouseup' ); // Manage ENTER, since onclick is blocked in IE (#8041).
+				keys[ 32 ] = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'mouseup' : 'click'; // SPACE
+				CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && ( keys[ 13 ] = 'mouseup' ); // Manage ENTER, since onclick is blocked in IE (#8041).
 
 				this._.pendingHtml = [];
 				this._.pendingList = [];
@@ -90,7 +90,7 @@ CKEDITOR.plugins.add( 'listblock', {
 					var data = {
 						id: id,
 						val: value,
-						onclick: CKEDITOR.env.ie ? 'onclick="return false;" onmouseup' : 'onclick',
+						onclick: ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'onclick="return false;" onmouseup' : 'onclick',
 						clickFn: this._.getClick(),
 						title: title || value,
 						text: html || value

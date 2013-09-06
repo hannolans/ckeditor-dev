@@ -122,7 +122,7 @@ CKEDITOR.dialog.add( 'smiley', function( editor ) {
 		'<div>' +
 		'<span id="' + labelId + '" class="cke_voice_label">' + lang.options + '</span>',
 		'<table role="listbox" aria-labelledby="' + labelId + '" style="width:100%;height:100%;border-collapse:separate;" cellspacing="2" cellpadding="2"',
-		CKEDITOR.env.ie && CKEDITOR.env.quirks ? ' style="position:absolute;"' : '',
+		CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks ? ' style="position:absolute;"' : '',
 		'><tbody>'
 		];
 
@@ -136,7 +136,7 @@ CKEDITOR.dialog.add( 'smiley', function( editor ) {
 			'<a href="javascript:void(0)" role="option"', ' aria-posinset="' + ( i + 1 ) + '"', ' aria-setsize="' + size + '"', ' aria-labelledby="' + smileyLabelId + '"', ' class="cke_smile cke_hand" tabindex="-1" onkeydown="CKEDITOR.tools.callFunction( ', onKeydown, ', event, this );">', '<img class="cke_hand" title="', config.smiley_descriptions[ i ], '"' +
 					' cke_src="', CKEDITOR.tools.htmlEncode( config.smiley_path + images[ i ] ), '" alt="', config.smiley_descriptions[ i ], '"', ' src="', CKEDITOR.tools.htmlEncode( config.smiley_path + images[ i ] ), '"',
 		// IE BUG: Below is a workaround to an IE image loading bug to ensure the image sizes are correct.
-		( CKEDITOR.env.ie ? ' onload="this.setAttribute(\'width\', 2); this.removeAttribute(\'width\');" ' : '' ), '>' +
+		( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? ' onload="this.setAttribute(\'width\', 2); this.removeAttribute(\'width\');" ' : '' ), '>' +
 				'<span id="' + smileyLabelId + '" class="cke_voice_label">' + config.smiley_descriptions[ i ] + '</span>' +
 			'</a>', '</td>' );
 

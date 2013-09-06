@@ -48,7 +48,7 @@ CKEDITOR.dialog.add( 'sourcedialog', function( editor ) {
 					return true;
 
 				// Set data asynchronously to avoid errors in IE.
-				CKEDITOR.env.ie ?
+				( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
 						CKEDITOR.tools.setTimeout( setData, 0, this, newData )
 					:
 						setData.call( this, newData );

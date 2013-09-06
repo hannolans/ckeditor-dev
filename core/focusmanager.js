@@ -177,7 +177,7 @@
 
 					// Use "focusin/focusout" events instead of capture phase in IEs,
 					// which fires synchronously.
-					if ( CKEDITOR.env.ie ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 						focusEvent = 'focusin';
 						blurEvent = 'focusout';
 					} else

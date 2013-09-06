@@ -14,7 +14,7 @@
 			CKEDITOR.env.gecko ? '-moz-' :
 			CKEDITOR.env.webkit ? '-webkit-' :
 			CKEDITOR.env.opera ? '-o-' :
-			CKEDITOR.env.ie ? '-ms-' :
+			( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '-ms-' :
 			'';
 
 	CKEDITOR.on( 'reset', function() {

@@ -1070,7 +1070,7 @@
 				// Fore none-IE, some useful data might be buried under these IE-conditional
 				// comments where RegExp were the right approach to dig them out where usual approach
 				// is transform it into a fake element node which hold the desired data.
-				comment: !CKEDITOR.env.ie ? function( value, node ) {
+				comment: !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? function( value, node ) {
 					var imageInfo = value.match( /<img.*?>/ ),
 						listInfo = value.match( /^\[if !supportLists\]([\s\S]*?)\[endif\]$/ );
 

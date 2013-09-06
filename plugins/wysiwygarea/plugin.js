@@ -21,13 +21,13 @@
 			editor.addMode( 'wysiwyg', function( callback ) {
 				var src = 'document.open();' +
 					// In IE, the document domain must be set any time we call document.open().
-					( CKEDITOR.env.ie ? '(' + CKEDITOR.tools.fixDomain + ')();' : '' ) +
+					( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '(' + CKEDITOR.tools.fixDomain + ')();' : '' ) +
 					'document.close();';
 
 				// With IE, the custom domain has to be taken care at first,
 				// for other browers, the 'src' attribute should be left empty to
 				// trigger iframe's 'load' event.
-				src = CKEDITOR.env.air ? 'javascript:void(0)' : CKEDITOR.env.ie ? 'javascript:void(function(){' + encodeURIComponent( src ) + '}())'
+				src = CKEDITOR.env.air ? 'javascript:void(0)' : ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'javascript:void(function(){' + encodeURIComponent( src ) + '}())'
 					:
 					'';
 
@@ -41,7 +41,7 @@
 
 				// Asynchronous iframe loading is only required in IE>8 and Gecko (other reasons probably).
 				// Do not use it on WebKit as it'll break the browser-back navigation.
-				var useOnloadEvent = CKEDITOR.env.ie || CKEDITOR.env.gecko;
+				var useOnloadEvent = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.gecko;
 				if ( useOnloadEvent )
 					iframe.on( 'load', onLoad );
 
@@ -49,7 +49,7 @@
 					frameDesc = editor.lang.common.editorHelp;
 
 				if ( frameLabel ) {
-					if ( CKEDITOR.env.ie )
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 						frameLabel += ', ' + frameDesc;
 
 					iframe.setAttribute( 'title', frameLabel );
@@ -140,7 +140,7 @@
 
 		body.contentEditable = true;
 
-		if ( CKEDITOR.env.ie ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 			// Don't display the focus border.
 			body.hideFocus = true;
 
@@ -159,7 +159,7 @@
 
 		this.setup();
 
-		if ( CKEDITOR.env.ie ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 			doc.getDocumentElement().addClass( doc.$.compatMode );
 
 			// Prevent IE from leaving new paragraph after deleting all contents in body. (#6966)
@@ -199,13 +199,13 @@
 				this.getDocument().$.execCommand( 'enableObjectResizing', false, false );
 			} catch ( e ) {
 				// For browsers in which the above method failed, we can cancel the resizing on the fly (#4208)
-				this.attachListener( this, CKEDITOR.env.ie ? 'resizestart' : 'resize', function( evt ) {
+				this.attachListener( this, ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'resizestart' : 'resize', function( evt ) {
 					evt.data.preventDefault();
 				});
 			}
 		}
 
-		if ( CKEDITOR.env.gecko || CKEDITOR.env.ie && editor.document.$.compatMode == 'CSS1Compat' ) {
+		if ( CKEDITOR.env.gecko || CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && editor.document.$.compatMode == 'CSS1Compat' ) {
 			this.attachListener( this, 'keydown', function( evt ) {
 				var keyCode = evt.data.getKeystroke();
 
@@ -213,7 +213,7 @@
 				if ( keyCode == 33 || keyCode == 34 ) {
 					// PageUp/PageDown scrolling is broken in document
 					// with standard doctype, manually fix it. (#4736)
-					if ( CKEDITOR.env.ie ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 						setTimeout( function() {
 							editor.getSelection().scrollIntoView();
 						}, 0 );
@@ -232,7 +232,7 @@
 			});
 		}
 
-		if ( CKEDITOR.env.ie ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 			// [IE] Iframe will still keep the selection when blurred, if
 			// focus is moved onto a non-editing host, e.g. link or button, but
 			// it becomes a problem for the object type selection, since the resizer
@@ -260,7 +260,7 @@
 		// [IE] JAWS will not recognize the aria label we used on the iframe
 		// unless the frame window title string is used as the voice label,
 		// backup the original one and restore it on output.
-		if ( CKEDITOR.env.ie )
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 			editor.document.$.title = this._.docTitle;
 
 		CKEDITOR.tools.setTimeout( function() {
@@ -281,7 +281,7 @@
 			//
 			// Also, for some unknown reasons, short timeouts (e.g. 100ms) do not
 			// fix the problem. :(
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				setTimeout( function() {
 					if ( editor.document ) {
 						var $body = editor.document.$.body;
@@ -409,14 +409,14 @@
 					// The script that launches the bootstrap logic on 'domReady', so the document
 					// is fully editable even before the editing iframe is fully loaded (#4455).
 					var bootstrapCode =
-						'<script id="cke_actscrpt" type="text/javascript"' + ( CKEDITOR.env.ie ? ' defer="defer" ' : '' ) + '>' +
+						'<script id="cke_actscrpt" type="text/javascript"' + ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? ' defer="defer" ' : '' ) + '>' +
 							'var wasLoaded=0;' +	// It must be always set to 0 as it remains as a window property.
 							'function onload(){' +
 								'if(!wasLoaded)' +	// FF3.6 calls onload twice when editor.setData. Stop that.
 									'window.parent.CKEDITOR.tools.callFunction(' + this._.frameLoadedHandler + ',window);' +
 								'wasLoaded=1;' +
 							'}' +
-							( CKEDITOR.env.ie ? 'onload();' : 'document.addEventListener("DOMContentLoaded", onload, false );' ) +
+							( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'onload();' : 'document.addEventListener("DOMContentLoaded", onload, false );' ) +
 						'</script>';
 
 					// For IE<9 add support for HTML5's elements.

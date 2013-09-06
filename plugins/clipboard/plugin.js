@@ -144,7 +144,7 @@
 						data = editable_wrapper.getHtml().replace( /<br>$/i, '' );
 				}
 
-				if ( CKEDITOR.env.ie ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 					// &nbsp; <p> -> <p> (br.cke-pasted-remove will be removed later)
 					data = data.replace( /^&nbsp;(?: |\r\n)?<(\w+)/g, function( match, elementName ) {
 						if ( elementName.toLowerCase() in blockElements ) {
@@ -244,7 +244,7 @@
 			// Chrome and Firefox works well with both events, so better to use 'paste'
 			// which will handle pasting from e.g. browsers' menu bars.
 			// IE7/8 doesn't like 'paste' event for which it's throwing random errors.
-			mainPasteEvent = CKEDITOR.env.ie ? 'beforepaste' : 'paste';
+			mainPasteEvent = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'beforepaste' : 'paste';
 
 		addListeners();
 		addButtonsCommands();
@@ -397,7 +397,7 @@
 			// it's introduced by a document command execution (e.g. toolbar buttons) or
 			// user paste behaviors (e.g. CTRL+V).
 			editable.on( mainPasteEvent, function( evt ) {
-				if ( CKEDITOR.env.ie && preventBeforePasteEvent )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && preventBeforePasteEvent )
 					return;
 
 				// If you've just asked yourself why preventPasteEventNow() is not here, but
@@ -446,7 +446,7 @@
 			//		special flag, other than preventPasteEvent. But we still would have to
 			//		have preventPasteEvent for the second event fired by execIECommand.
 			//		Code would be longer and not cleaner.
-			CKEDITOR.env.ie && editable.on( 'paste', function( evt ) {
+			CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && editable.on( 'paste', function( evt ) {
 				if ( preventPasteEvent )
 					return;
 				// Cancel next 'paste' event fired by execIECommand( 'paste' )
@@ -464,7 +464,7 @@
 			});
 
 			// [IE] Dismiss the (wrong) 'beforepaste' event fired on context/toolbar menu open. (#7953)
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				editable.on( 'contextmenu', preventBeforePasteEventNow, null, null, 0 );
 
 				editable.on( 'beforepaste', function( evt ) {
@@ -483,7 +483,7 @@
 			// Use editor.document instead of editable in non-IEs for observing mouseup
 			// since editable won't fire the event if selection process started within
 			// iframe and ended out of the editor (#9851).
-			editable.attachListener( CKEDITOR.env.ie ? editable : editor.document.getDocumentElement(), 'mouseup', function() {
+			editable.attachListener( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? editable : editor.document.getDocumentElement(), 'mouseup', function() {
 				mouseupTimeout = setTimeout( function() {
 					setToolbarStates();
 				}, 0 );
@@ -508,7 +508,7 @@
 				exec: function( data ) {
 					// Attempts to execute the Cut and Copy operations.
 					function tryToCutCopy( type ) {
-						if ( CKEDITOR.env.ie )
+						if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 							return execIECommand( type );
 
 						// non-IEs part
@@ -628,7 +628,7 @@
 
 		// Cutting off control type element in IE standards breaks the selection entirely. (#4881)
 		function fixCut() {
-			if ( !CKEDITOR.env.ie || CKEDITOR.env.quirks )
+			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.quirks )
 				return;
 
 			var sel = editor.getSelection(),
@@ -681,7 +681,7 @@
 			// what is indistinguishable from pasted <br> (copying <br> in Opera isn't possible,
 			// but it can be copied from other browser).
 			var pastebin = new CKEDITOR.dom.element(
-				( CKEDITOR.env.webkit || editable.is( 'body' ) ) && !( CKEDITOR.env.ie || CKEDITOR.env.opera ) ? 'body' : 'div', doc );
+				( CKEDITOR.env.webkit || editable.is( 'body' ) ) && !( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.opera ) ? 'body' : 'div', doc );
 
 			pastebin.setAttribute( 'id', 'cke_pastebin' );
 
@@ -719,7 +719,7 @@
 					}
 				} else {
 					// Opera and IE doesn't allow to append to html element.
-					editable.getAscendant( CKEDITOR.env.ie || CKEDITOR.env.opera ? 'body' : 'html', 1 ).append( pastebin );
+					editable.getAscendant( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.opera ? 'body' : 'html', 1 ).append( pastebin );
 				}
 
 				pastebin.setStyles({
@@ -769,7 +769,7 @@
 			// Editable will then lock selection inside itself and after accepting security alert
 			// this selection will be restored. We overwrite stored selection, so it's restored
 			// in pastebin. (#9552)
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				blurListener = editable.once( 'blur', function( evt ) {
 					editor.lockSelection( selPastebin );
 				} );
@@ -788,7 +788,7 @@
 				blurListener && blurListener.removeListener();
 
 				// Restore properly the document focus. (#8849)
-				if ( CKEDITOR.env.ie )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
 					editable.focus();
 
 				// IE7: selection must go before removing pastebin. (#8691)
@@ -815,7 +815,7 @@
 		// * worked, getClipboardDataByPastebin will grab it,
 		// * didn't work, pastebin will be empty and editor#paste won't be fired.
 		function getClipboardDataDirectly() {
-			if ( CKEDITOR.env.ie ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 				// Prevent IE from pasting at the begining of the document.
 				editor.focus();
 
@@ -863,7 +863,7 @@
 					preventPasteEventNow();
 
 					// Simulate 'beforepaste' event for all none-IEs.
-					!CKEDITOR.env.ie && editable.fire( 'beforepaste' );
+					!( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && editable.fire( 'beforepaste' );
 
 					// Simulate 'paste' event for Opera/Firefox2.
 					if ( CKEDITOR.env.opera || CKEDITOR.env.gecko && CKEDITOR.env.version < 10900 )
@@ -922,7 +922,7 @@
 				// IE Bug: queryCommandEnabled('paste') fires also 'beforepaste(copy/cut)',
 				// guard to distinguish from the ordinary sources (either
 				// keyboard paste or execCommand) (#4874).
-				CKEDITOR.env.ie && ( preventBeforePasteEvent = 1 );
+				CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && ( preventBeforePasteEvent = 1 );
 				try {
 					// Always return true for Webkit (which always returns false)
 					retval = editor.document.$.queryCommandEnabled( command ) || CKEDITOR.env.webkit;
@@ -949,7 +949,7 @@
 			// Plain text or ( <div><br></div> and text inside <div> ).
 			if ( !data.match( /^[^<]*$/g ) && !data.match( /^(<div><br( ?\/)?><\/div>|<div>[^<]*<\/div>)*$/gi ) )
 				return 'html';
-		} else if ( CKEDITOR.env.ie ) {
+		} else if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
 			// Text and <br> or ( text and <br> in <p> - paragraphs can be separated by new \r\n ).
 			if ( !data.match( /^([^<]|<br( ?\/)?>)*$/gi ) && !data.match( /^(<p>([^<]|<br( ?\/)?>)*<\/p>|(\r\n))*$/gi ) )
 				return 'html';

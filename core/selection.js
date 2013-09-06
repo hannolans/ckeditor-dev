@@ -189,7 +189,7 @@
 		}, null, null, -100 );
 
 		// FF && Webkit.
-		if ( !CKEDITOR.env.ie ) {
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ) {
 			var range = new CKEDITOR.dom.range( root );
 			range.moveToElementEditStart( root );
 
@@ -277,7 +277,7 @@
 			// Browsers could loose the selection once the editable lost focus,
 			// in such case we need to reproduce it by saving a locked selection
 			// and restoring it upon focus gain.
-			if ( CKEDITOR.env.ie || CKEDITOR.env.newIE || CKEDITOR.env.opera || isInline ) {
+			if ( CKEDITOR.env.ie || CKEDITOR.env.opera || isInline ) {
 				var lastSel;
 				// Save a fresh copy of the selection.
 				function saveSel() {
@@ -299,7 +299,7 @@
 			}
 
 			// The following selection related fixes applies to only framed editable.
-			if ( ( CKEDITOR.env.ie || CKEDITOR.env.newIE ) && !isInline ) {
+			if ( CKEDITOR.env.ie && !isInline ) {
 				var scroll;
 				editable.attachListener( editable, 'mousedown', function( evt ) {
 					// IE scrolls document to top on right mousedown
@@ -451,7 +451,7 @@
 			// since editable won't fire the event if selection process started within iframe and ended out
 			// of the editor (#9851).
 			else
-				editable.attachListener( CKEDITOR.env.ie || CKEDITOR.env.newIE ? editable : doc.getDocumentElement(), 'mouseup', checkSelectionChangeTimeout, editor );
+				editable.attachListener( CKEDITOR.env.ie ? editable : doc.getDocumentElement(), 'mouseup', checkSelectionChangeTimeout, editor );
 
 			if ( CKEDITOR.env.webkit ) {
 				// Before keystroke is handled by editor, check to remove the filling char.
@@ -765,7 +765,7 @@
 				sel.anchorNode && sel.anchorNode.nodeType == CKEDITOR.NODE_DOCUMENT )
 				fixInitialSelection( root, sel, true );
 		}
-		else if ( CKEDITOR.env.ie || CKEDITOR.env.newIE ) {
+		else if ( CKEDITOR.env.ie ) {
 			var active;
 
 			// IE8,9 throw unspecified error when trying to access document.$.activeElement.
