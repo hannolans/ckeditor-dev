@@ -28,7 +28,7 @@
 	template += ' onkeydown="return CKEDITOR.tools.callFunction({keydownFn},event);"' +
 		' onfocus="return CKEDITOR.tools.callFunction({focusFn},event);" ' +
 		' onmousedown="return CKEDITOR.tools.callFunction({mousedownFn},event);" ' +
-		( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'onclick="return false;" onmouseup' : 'onclick' ) + // #188
+		( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 'onclick="return false;" onmouseup' : 'onclick' ) + // #188
 			'="CKEDITOR.tools.callFunction({clickFn},this);return false;">' +
 		'<span class="cke_button_icon cke_button__{iconName}_icon" style="{style}"';
 

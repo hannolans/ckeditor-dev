@@ -300,7 +300,7 @@
 
 					node = walker.next();
 					if ( node && node.type == CKEDITOR.NODE_ELEMENT && node.is( 'ul', 'ol' ) ) {
-						( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? doc.createText( '\xa0' ) : doc.createElement( 'br' ) ).insertBefore( node );
+						( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? doc.createText( '\xa0' ) : doc.createElement( 'br' ) ).insertBefore( node );
 					}
 				}
 
@@ -354,7 +354,7 @@
 					}
 				}
 
-				if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+				if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 					newBlock.appendBogus();
 
 				if ( !newBlock.getParent() )
@@ -369,7 +369,7 @@
 				// The previousBlock check has been included because it may be
 				// empty if we have fixed a block-less space (like ENTER into an
 				// empty table cell).
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && isStartOfBlock && ( !isEndOfBlock || !previousBlock.getChildCount() ) ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && isStartOfBlock && ( !isEndOfBlock || !previousBlock.getChildCount() ) ) {
 					// Move the selection to the new block.
 					range.moveToElementEditStart( isEndOfBlock ? previousBlock : newBlock );
 					range.select();
@@ -429,7 +429,7 @@
 						doc.createText( '' ).insertAfter( startBlock );
 
 					// IE has different behaviors regarding position.
-					range.setStartAt( startBlock.getNext(), ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? CKEDITOR.POSITION_BEFORE_START : CKEDITOR.POSITION_AFTER_START );
+					range.setStartAt( startBlock.getNext(), ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? CKEDITOR.POSITION_BEFORE_START : CKEDITOR.POSITION_AFTER_START );
 				}
 			} else {
 				var lineBreak;
@@ -444,7 +444,7 @@
 				range.insertNode( lineBreak );
 
 				// IE has different behavior regarding position.
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 					range.setStartAt( lineBreak, CKEDITOR.POSITION_AFTER_END );
 				else {
 					// A text node is required by Gecko only to make the cursor blink.

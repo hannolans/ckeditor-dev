@@ -1611,7 +1611,7 @@ CKEDITOR.dom.range = function( root ) {
 			this.extractContents().appendTo( fixedBlock );
 			fixedBlock.trim();
 
-			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 				fixedBlock.appendBogus();
 
 			this.insertNode( fixedBlock );
@@ -1673,7 +1673,7 @@ CKEDITOR.dom.range = function( root ) {
 					// In Gecko, the last child node must be a bogus <br>.
 					// Note: bogus <br> added under <ul> or <ol> would cause
 					// lists to be incorrectly rendered.
-					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && !startBlock.is( 'ul', 'ol' ) )
+					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && !startBlock.is( 'ul', 'ol' ) )
 						startBlock.appendBogus();
 				}
 			}
@@ -1825,7 +1825,7 @@ CKEDITOR.dom.range = function( root ) {
 
 			// [IE] Special handling for range start in text with a leading NBSP,
 			// we it to be isolated, for bogus check.
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && startOffset && startContainer.type == CKEDITOR.NODE_TEXT )
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && startOffset && startContainer.type == CKEDITOR.NODE_TEXT )
 			{
 				var textBefore = CKEDITOR.tools.ltrim( startContainer.substring( 0, startOffset ) );
 				if ( nbspRegExp.test( textBefore ) )
@@ -1865,7 +1865,7 @@ CKEDITOR.dom.range = function( root ) {
 
 			// [IE] Special handling for range end in text with a following NBSP,
 			// we it to be isolated, for bogus check.
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && endContainer.type == CKEDITOR.NODE_TEXT )
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && endContainer.type == CKEDITOR.NODE_TEXT )
 			{
 				var textAfter = CKEDITOR.tools.rtrim( endContainer.substring( endOffset ) );
 				if ( nbspRegExp.test( textAfter ) )

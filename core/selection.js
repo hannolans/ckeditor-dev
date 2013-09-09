@@ -189,7 +189,7 @@
 		}, null, null, -100 );
 
 		// FF && Webkit.
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ) {
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ) {
 			var range = new CKEDITOR.dom.range( root );
 			range.moveToElementEditStart( root );
 

@@ -67,16 +67,16 @@ CKEDITOR.dialog.add( 'checkbox', function( editor ) {
 				setup: function( element ) {
 					var value = element.getAttribute( 'value' );
 					// IE Return 'on' as default attr value.
-					this.setValue( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && value == 'on' ? '' : value );
+					this.setValue( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && value == 'on' ? '' : value );
 				},
 				commit: function( data ) {
 					var element = data.element,
 						value = this.getValue();
 
-					if ( value && !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && value == 'on' ) )
+					if ( value && !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && value == 'on' ) )
 						element.setAttribute( 'value', value );
 					else {
-						if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+						if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 							// Remove attribute 'value' of checkbox (#4721).
 							var checkbox = new CKEDITOR.dom.element( 'input', element.getDocument() );
 							element.copyAttributes( checkbox, { value:1 } );
@@ -101,7 +101,7 @@ CKEDITOR.dialog.add( 'checkbox', function( editor ) {
 				commit: function( data ) {
 					var element = data.element;
 
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 						var isElementChecked = !!element.getAttribute( 'checked' ),
 							isChecked = !!this.getValue();
 

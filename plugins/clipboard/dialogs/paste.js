@@ -61,7 +61,7 @@ CKEDITOR.dialog.add( 'paste', function( editor ) {
 	return {
 		title: lang.title,
 
-		minWidth: CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks ? 370 : 350,
+		minWidth: CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks ? 370 : 350,
 		minHeight: CKEDITOR.env.quirks ? 250 : 245,
 		onShow: function() {
 			// FIREFOX BUG: Force the browser to render the dialog to make the to-be-
@@ -129,7 +129,7 @@ CKEDITOR.dialog.add( 'paste', function( editor ) {
 					var src =
 							CKEDITOR.env.air ?
 								'javascript:void(0)' :
-							( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
+							( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ?
 								'javascript:void((function(){' + encodeURIComponent(
 									'document.open();' +
 									'(' + CKEDITOR.tools.fixDomain + ')();' +
@@ -168,7 +168,7 @@ CKEDITOR.dialog.add( 'paste', function( editor ) {
 
 					// IE need a redirect on focus to make
 					// the cursor blinking inside iframe. (#5461)
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 						var focusGrabber = CKEDITOR.dom.element.createFromHtml( '<span tabindex="-1" style="position:absolute" role="presentation"></span>' );
 						focusGrabber.on( 'focus', function() {
 							// Since fixDomain is called in src attribute,
@@ -191,7 +191,7 @@ CKEDITOR.dialog.add( 'paste', function( editor ) {
 					};
 
 					// Force container to scale in IE.
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 						container.setStyle( 'display', 'block' );
 						container.setStyle( 'height', ( iframe.$.offsetHeight + 2 ) + 'px' );
 					}

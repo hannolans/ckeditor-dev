@@ -185,7 +185,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 	 * @returns {CKEDITOR.dom.nodeList} The nodes list.
 	 */
 	getElementsByTag: function( tagName, namespace ) {
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && !( document.documentMode > 8 ) ) && namespace )
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && !( document.documentMode > 8 ) ) && namespace )
 			tagName = namespace + ':' + tagName;
 		return new CKEDITOR.dom.nodeList( this.$.getElementsByTagName( tagName ) );
 	},
@@ -261,7 +261,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 		// The script must be appended because if placed before the
 		// doctype, IE will go into quirks mode and mess with
 		// the editable, e.g. by changing its default height.
-		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 			html = html.replace( /(?:^\s*<!DOCTYPE[^>]*?>)|^/i, '$&\n<script data-cke-temp="1">(' + CKEDITOR.tools.fixDomain + ')();</script>' );
 
 		this.$.write( html );

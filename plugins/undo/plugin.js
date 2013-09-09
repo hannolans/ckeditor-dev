@@ -191,7 +191,7 @@
 				selection = contents && editor.getSelection();
 
 			// In IE, we need to remove the expando attributes.
-			CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && contents && ( contents = contents.replace( /\s+data-cke-expando=".*?"/g, '' ) );
+			CKEDITOR.env.ie && CKEDITOR.env.version < 11 && contents && ( contents = contents.replace( /\s+data-cke-expando=".*?"/g, '' ) );
 
 			this.contents = contents;
 			this.bookmarks = selection && selection.createBookmarks2( true );
@@ -297,7 +297,7 @@
 					var currentSnapshot = editor.getSnapshot();
 
 					// In IE, we need to remove the expando attributes.
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 						currentSnapshot = currentSnapshot.replace( /\s+data-cke-expando=".*?"/g, '' );
 
 					// If changes have taken place, while not been captured yet (#8459),
@@ -468,7 +468,7 @@
 
 			if ( image.bookmarks )
 				sel.selectBookmarks( image.bookmarks );
-			else if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+			else if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 				// IE BUG: If I don't set the selection to *somewhere* after setting
 				// document contents, then IE would create an empty paragraph at the bottom
 				// the next time the document is modified.

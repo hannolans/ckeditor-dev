@@ -100,7 +100,7 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 					'default': '',
 					accessKey: 'V',
 					commit: function( data ) {
-						if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && !this.getValue() ) {
+						if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && !this.getValue() ) {
 							var element = data.element,
 								fresh = new CKEDITOR.dom.element( 'input', editor.document );
 							element.copyAttributes( fresh, { value:1 } );
@@ -161,7 +161,7 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 				commit: function( data ) {
 					var element = data.element;
 
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 						var elementType = element.getAttribute( 'type' );
 						var myType = this.getValue();
 

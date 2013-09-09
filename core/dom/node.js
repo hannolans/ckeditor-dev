@@ -686,7 +686,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.node.prototype, {
 			break;
 		}
 
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && !CKEDITOR.env.opera ) {
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && !CKEDITOR.env.opera ) {
 			child = this.$.lastChild;
 
 			if ( child && child.type == 1 && child.nodeName.toLowerCase() == 'br' ) {

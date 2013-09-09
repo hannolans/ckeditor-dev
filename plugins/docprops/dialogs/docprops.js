@@ -148,7 +148,7 @@ CKEDITOR.dialog.add( 'docProps', function( editor ) {
 	var previewSrc = 'javascript:' +
 		'void((function(){' + encodeURIComponent(
 			'document.open();' +
-			( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '(' + CKEDITOR.tools.fixDomain + ')();' : '' ) +
+			( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? '(' + CKEDITOR.tools.fixDomain + ')();' : '' ) +
 			'document.write( \'<html style="background-color: #ffffff; height: 100%"><head></head><body style="width: 100%; height: 100%; margin: 0px">' + lang.previewHtml + '</body></html>\' );' +
 			'document.close();'
 		) + '})())';

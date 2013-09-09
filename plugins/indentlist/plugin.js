@@ -211,7 +211,7 @@
 					while ( ( followingList = followingList.getNext() ) && followingList.is && followingList.getName() in context ) {
 						// IE requires a filler NBSP for nested list inside empty list item,
 						// otherwise the list item will be inaccessiable. (#4476)
-						if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && !li.getFirst( function( node ) {
+						if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && !li.getFirst( function( node ) {
 							return isNotWhitespaces( node ) && isNotBookmark( node );
 						} ) )
 							li.append( range.document.createText( '\u00a0' ) );

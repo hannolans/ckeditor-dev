@@ -677,7 +677,7 @@ CKEDITOR.STYLE_OBJECT = 3;
 					// repeatedly. Also, for IE, we must normalize body, not documentElement.
 					// IE is also known for having a "crash effect" with normalize().
 					// We should try to normalize with IE too in some way, somewhere.
-					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 						styleNode.$.normalize();
 				}
 				// Style already inherit from parents, left just to clear up any internal overrides. (#5931)
@@ -977,7 +977,7 @@ CKEDITOR.STYLE_OBJECT = 3;
 			replace( preBlock.getHtml(), /^\n/, '' );
 
 		// Krugle: IE normalizes innerHTML from <pre>, breaking whitespaces.
-		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 			preBlock.$.outerHTML = '<pre>' + mergedHtml + '</pre>';
 		else
 			preBlock.setHtml( mergedHtml );
@@ -1079,7 +1079,7 @@ CKEDITOR.STYLE_OBJECT = 3;
 		preHtml = preHtml.replace( /<br\b[^>]*>/gi, '\n' );
 
 		// Krugle: IE normalizes innerHTML to <pre>, breaking whitespaces.
-		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 			var temp = block.getDocument().createElement( 'div' );
 			temp.append( newBlock );
 			newBlock.$.outerHTML = '<pre>' + preHtml + '</pre>';

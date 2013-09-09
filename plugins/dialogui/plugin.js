@@ -603,7 +603,7 @@ CKEDITOR.plugins.add( 'dialogui', {
 								' src="javascript:void(' ];
 
 						// Support for custom document.domain on IE. (#10165)
-						html.push( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
+						html.push( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ?
 							'(function(){' + encodeURIComponent(
 								'document.open();' +
 								'(' + CKEDITOR.tools.fixDomain + ')();' +
@@ -980,7 +980,7 @@ CKEDITOR.plugins.add( 'dialogui', {
 				option.$.text = label;
 				option.$.value = ( value === undefined || value === null ) ? label : value;
 				if ( index === undefined || index === null ) {
-					if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 						selectElement.add( option.$ );
 					else
 						selectElement.add( option.$, null );
@@ -1135,7 +1135,7 @@ CKEDITOR.plugins.add( 'dialogui', {
 			 */
 			eventProcessors: {
 				onChange: function( dialog, func ) {
-					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 						return commonEventProcessors.onChange.apply( this, arguments );
 					else {
 						dialog.on( 'load', function() {
@@ -1257,7 +1257,7 @@ CKEDITOR.plugins.add( 'dialogui', {
 
 					var size = '';
 					if ( elementDefinition.size )
-						size = elementDefinition.size - ( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 7 : 0 ); // "Browse" button is bigger in IE.
+						size = elementDefinition.size - ( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 7 : 0 ); // "Browse" button is bigger in IE.
 
 					var inputId = _.frameId + '_input';
 
@@ -1279,7 +1279,7 @@ CKEDITOR.plugins.add( 'dialogui', {
 						'</body></html>',
 						'<script>',
 							// Support for custom document.domain in IE.
-							( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '(' + CKEDITOR.tools.fixDomain + ')();' : '',
+							( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? '(' + CKEDITOR.tools.fixDomain + ')();' : '',
 
 							'window.parent.CKEDITOR.tools.callFunction(' + callNumber + ');',
 							'window.onbeforeunload = function() {window.parent.CKEDITOR.tools.callFunction(' + unloadNumber + ')}',

@@ -148,7 +148,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 				var element = this.element,
 					iframe = this._.iframe,
 					// Non IE prefer the event into a window object.
-					focused = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? iframe : new CKEDITOR.dom.window( iframe.$.contentWindow ),
+					focused = ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? iframe : new CKEDITOR.dom.window( iframe.$.contentWindow ),
 					doc = element.getDocument(),
 					positionedAncestor = this._.parentElement.getPositionedAncestor(),
 					position = offsetParent.getDocumentPosition( doc ),
@@ -241,7 +241,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 							// Account for extra height needed due to IE quirks box model bug:
 							// http://en.wikipedia.org/wiki/Internet_Explorer_box_model_bug
 							// (#3426)
-							if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks && width > 0 )
+							if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks && width > 0 )
 								width += ( target.$.offsetWidth || 0 ) - ( target.$.clientWidth || 0 ) + 3;
 
 							// Add some extra pixels to improve the appearance.
@@ -254,7 +254,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 							// Account for extra height needed due to IE quirks box model bug:
 							// http://en.wikipedia.org/wiki/Internet_Explorer_box_model_bug
 							// (#3426)
-							if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks && height > 0 )
+							if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks && height > 0 )
 								height += ( target.$.offsetHeight || 0 ) - ( target.$.clientHeight || 0 ) + 3;
 
 							target.setStyle( 'height', height + 'px' );
@@ -329,7 +329,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 						// If IE is in RTL, we have troubles with absolute
 						// position and horizontal scrolls. Here we have a
 						// series of hacks to workaround it. (#6146)
-						if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+						if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 							var offsetParent = new CKEDITOR.dom.element( element.$.offsetParent ),
 								scrollParent = offsetParent;
 

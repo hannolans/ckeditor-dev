@@ -204,7 +204,7 @@
 	// In Wysiwyg HTML: Browser dependent - Filler is either BR for non-IE, or &NBSP; for IE, <BR> is NEVER considered as bogus for IE.
 	function createBogusAndFillerRules( editor, type ) {
 		function createFiller( isOutput ) {
-			return isOutput || ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ?
+			return isOutput || ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ?
 			       new CKEDITOR.htmlParser.text( '\xa0' ) :
 			       new CKEDITOR.htmlParser.element( 'br', { 'data-cke-bogus': 1 } );
 		}
@@ -261,7 +261,7 @@
 		function maybeBogus( node, atBlockEnd ) {
 
 			// BR that's not from IE DOM, except for a EOL marker.
-			if ( !( isOutput && ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ) &&
+			if ( !( isOutput && ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ) &&
 					 node.type == CKEDITOR.NODE_ELEMENT && node.name == 'br' &&
 					 !node.attributes[ 'data-cke-eol' ] )
 				return true;
@@ -278,7 +278,7 @@
 				}
 
 				// From IE DOM, at the end of a text block, or before block boundary.
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && isOutput && ( !atBlockEnd || node.parent.name in textBlockTags ) )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && isOutput && ( !atBlockEnd || node.parent.name in textBlockTags ) )
 					return true;
 
 				// From the output.
@@ -339,12 +339,12 @@
 		function isEmptyBlockNeedFiller( block ) {
 
 			// DO NOT fill empty editable in IE.
-			if ( !isOutput && CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && block.type == CKEDITOR.NODE_DOCUMENT_FRAGMENT )
+			if ( !isOutput && CKEDITOR.env.ie && CKEDITOR.env.version < 11 && block.type == CKEDITOR.NODE_DOCUMENT_FRAGMENT )
 				return false;
 
 			// 1. For IE version >=8,  empty blocks are displayed correctly themself in wysiwiyg;
 			// 2. For the rest, at least table cell and list item need no filler space. (#6248)
-			if ( !isOutput && CKEDITOR.env.ie && CKEDITOR.env.version <= 10 &&
+			if ( !isOutput && CKEDITOR.env.ie && CKEDITOR.env.version < 11 &&
 					 ( document.documentMode > 7 ||
 						 block.name in CKEDITOR.dtd.tr ||
 						 block.name in CKEDITOR.dtd.$listItem ) ) {
@@ -619,7 +619,7 @@
 		}
 	};
 
-	if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+	if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 		// IE outputs style attribute in capital letters. We should convert
 		// them back to lower case, while not hurting the values (#5930)
 		defaultHtmlFilterRules.attributes.style = function( value, element ) {

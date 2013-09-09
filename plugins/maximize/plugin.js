@@ -135,7 +135,7 @@
 						savedScroll = mainWindow.getScrollPosition();
 					} else {
 						var $textarea = editor.editable().$;
-						savedSelection = !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && [ $textarea.selectionStart, $textarea.selectionEnd ];
+						savedSelection = !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && [ $textarea.selectionStart, $textarea.selectionEnd ];
 						savedScroll = [ $textarea.scrollLeft, $textarea.scrollTop ];
 					}
 
@@ -169,7 +169,7 @@
 						!( CKEDITOR.env.gecko && CKEDITOR.env.quirks ) && mainDocument.getBody().setStyles( styles );
 
 						// Scroll to the top left (IE needs some time for it - #4923).
-						( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? setTimeout( function() {
+						( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? setTimeout( function() {
 							mainWindow.$.scrollTo( 0, 0 );
 						}, 0 ) : mainWindow.$.scrollTo( 0, 0 );
 
@@ -218,7 +218,7 @@
 						}
 
 						// Restore the window scroll position.
-						( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? setTimeout( function() {
+						( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? setTimeout( function() {
 							mainWindow.$.scrollTo( outerScroll.x, outerScroll.y );
 						}, 0 ) : mainWindow.$.scrollTo( outerScroll.x, outerScroll.y );
 

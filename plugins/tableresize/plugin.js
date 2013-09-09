@@ -5,10 +5,10 @@
 
 (function() {
 	var pxUnit = CKEDITOR.tools.cssLength,
-		needsIEHacks = CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks );
+		needsIEHacks = CKEDITOR.env.ie && CKEDITOR.env.version < 11 && ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks );
 
 	function getWidth( el ) {
-		return ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? el.$.clientWidth : parseInt( el.getComputedStyle( 'width' ), 10 );
+		return ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? el.$.clientWidth : parseInt( el.getComputedStyle( 'width' ), 10 );
 	}
 
 	function getBorderWidth( element, side ) {

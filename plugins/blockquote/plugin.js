@@ -26,7 +26,7 @@
 			// Kludge for #1592: if the bookmark nodes are in the beginning of
 			// blockquote, then move them to the nearest block element in the
 			// blockquote.
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 				var bookmarkStart = bookmarks[ 0 ].startNode,
 					bookmarkEnd = bookmarks[ 0 ].endNode,
 					cursor;

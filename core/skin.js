@@ -141,7 +141,7 @@
 				for ( var i = 0, ua; i < uas.length; i++ ) {
 					ua = uas[ i ];
 
-					if ( env.ie && env.version <= 10 ) {
+					if ( env.ie && env.version < 11 ) {
 						if ( ( ua.replace( /^ie/, '' ) == env.version ) || ( env.quirks && ua == 'iequirks' ) )
 							ua = 'ie';
 					}
@@ -244,7 +244,7 @@
 				for ( r = 0; r < replace.length; r++ )
 					content = content.replace( replace[ r ][ 0 ], replace[ r ][ 1 ] );
 
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 					styleNodes[ id ].$.styleSheet.cssText += content;
 				else
 					styleNodes[ id ].$.innerHTML += content;
@@ -254,7 +254,7 @@
 
 	CKEDITOR.on( 'instanceLoaded', function( evt ) {
 		// The chameleon feature is not for IE quirks.
-		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks )
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks )
 			return;
 
 		var editor = evt.editor,

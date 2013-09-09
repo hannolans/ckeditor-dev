@@ -117,7 +117,7 @@ CKEDITOR.plugins.placeholder = {
 			return element.getOuterHtml();
 
 		if ( oldElement ) {
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 				element.insertAfter( oldElement );
 				// Some time is required for IE before the element is removed.
 				setTimeout( function() {

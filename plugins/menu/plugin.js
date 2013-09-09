@@ -105,7 +105,7 @@ CKEDITOR.plugins.add( 'menu', {
 	// #188
 	menuItemSource += ' onmouseover="CKEDITOR.tools.callFunction({hoverFn},{index});"' +
 			' onmouseout="CKEDITOR.tools.callFunction({moveOutFn},{index});" ' +
-			( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'onclick="return false;" onmouseup' : 'onclick' ) +
+			( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 'onclick="return false;" onmouseup' : 'onclick' ) +
 				'="CKEDITOR.tools.callFunction({clickFn},{index}); return false;"' +
 			'>';
 
@@ -308,9 +308,9 @@ CKEDITOR.plugins.add( 'menu', {
 					keys[ 9 ] = 'next'; // TAB
 					keys[ 38 ] = 'prev'; // ARROW-UP
 					keys[ CKEDITOR.SHIFT + 9 ] = 'prev'; // SHIFT + TAB
-					keys[ ( editor.lang.dir == 'rtl' ? 37 : 39 ) ] = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'mouseup' : 'click'; // ARROW-RIGHT/ARROW-LEFT(rtl)
-					keys[ 32 ] = ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'mouseup' : 'click'; // SPACE
-					CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && ( keys[ 13 ] = 'mouseup' ); // Manage ENTER, since onclick is blocked in IE (#8041).
+					keys[ ( editor.lang.dir == 'rtl' ? 37 : 39 ) ] = ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 'mouseup' : 'click'; // ARROW-RIGHT/ARROW-LEFT(rtl)
+					keys[ 32 ] = ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 'mouseup' : 'click'; // SPACE
+					CKEDITOR.env.ie && CKEDITOR.env.version < 11 && ( keys[ 13 ] = 'mouseup' ); // Manage ENTER, since onclick is blocked in IE (#8041).
 
 					element = this._.element = block.element;
 

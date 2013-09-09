@@ -43,7 +43,7 @@
 			focus: function() {
 				// [IE] Use instead "setActive" method to focus the editable if it belongs to
 				// the host page document, to avoid bringing an unexpected scroll.
-				this.$[ CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && this.getDocument().equals( CKEDITOR.document ) ? 'setActive' : 'focus' ]();
+				this.$[ CKEDITOR.env.ie && CKEDITOR.env.version < 11 && this.getDocument().equals( CKEDITOR.document ) ? 'setActive' : 'focus' ]();
 
 				// Remedy if Safari doens't applies focus properly. (#279)
 				if ( CKEDITOR.env.safari && !this.isInline() ) {
@@ -62,7 +62,7 @@
 			on: function( name, fn ) {
 				var args = Array.prototype.slice.call( arguments, 0 );
 
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && ( /^focus|blur$/ ).exec( name ) ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && ( /^focus|blur$/ ).exec( name ) ) {
 					name = name == 'focus' ? 'focusin' : 'focusout';
 
 					// The "focusin/focusout" events bubbled, e.g. If there are elements with layout
@@ -614,10 +614,10 @@
 				});
 
 				// Prevent automatic submission in IE #6336
-				CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && this.attachListener( this, 'click', blockInputClick );
+				CKEDITOR.env.ie && CKEDITOR.env.version < 11 && this.attachListener( this, 'click', blockInputClick );
 
 				// Gecko/Webkit need some help when selecting control type elements. (#3448)
-				if ( !( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) || CKEDITOR.env.opera ) ) {
+				if ( !( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) || CKEDITOR.env.opera ) ) {
 					this.attachListener( this, 'mousedown', function( ev ) {
 						var control = ev.data.getTarget();
 						if ( control.is( 'img', 'hr', 'input', 'textarea', 'select' ) ) {
@@ -779,7 +779,7 @@
 				var fixedBlock = range.fixBlock( true, editor.config.enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p' );
 
 				// For IE, we should remove any filler node which was introduced before.
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) {
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) {
 					var first = fixedBlock.getFirst( isNotEmpty );
 					if ( first && isNbsp( first ) ) {
 						first.remove();
@@ -1203,9 +1203,9 @@
 				// Auto paragraphing.
 				if ( !nodeData.isBlock && ( fixBlock = autoParagraphTag( that.editor.config ) ) && !path.block && path.blockLimit && path.blockLimit.equals( range.root ) ) {
 					fixBlock = doc.createElement( fixBlock );
-					!( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && fixBlock.appendBogus();
+					!( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && fixBlock.appendBogus();
 					range.insertNode( fixBlock );
-					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && ( bogus = fixBlock.getBogus() ) )
+					if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && ( bogus = fixBlock.getBogus() ) )
 						bogus.remove();
 					range.moveToPosition( fixBlock, CKEDITOR.POSITION_BEFORE_END );
 				}
@@ -1310,7 +1310,7 @@
 			if ( bogusNeededBlocks ) {
 				// Bring back all block bogus nodes.
 				while ( ( node = bogusNeededBlocks.pop() ) ) {
-					node.append( ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? range.document.createText( '\u00a0' ) : range.document.createElement( 'br' ) );
+					node.append( ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? range.document.createText( '\u00a0' ) : range.document.createElement( 'br' ) );
 				}
 			}
 

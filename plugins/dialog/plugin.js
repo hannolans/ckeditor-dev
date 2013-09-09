@@ -161,7 +161,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			close = body.getChild( 1 );
 
 		// IFrame shim for dialog that masks activeX in IE. (#7619)
-		if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && !CKEDITOR.env.ie6Compat ) {
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && !CKEDITOR.env.ie6Compat ) {
 			var src = 'javascript:void(function(){' + encodeURIComponent( 'document.open();(' + CKEDITOR.tools.fixDomain + ')();document.close();' ) + '}())',
 				iframe = CKEDITOR.dom.element.createFromHtml( '<iframe' +
 					' frameBorder="0"' +
@@ -737,7 +737,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			// go back to see that dialog position is automagically fixed. No events,
 			// no style change - pure magic. This is a IE7 rendering issue, which can be
 			// fixed with dummy style redraw on each move.
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 )
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 )
 				element.setStyle( 'zoom', '100%' );
 
 			if ( isFixed && this._.position && this._.position.x == x && this._.position.y == y )
@@ -954,7 +954,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			var args = arguments;
 			this.foreach( function( widget ) {
 				// Make sure IE triggers "change" event on last focused input before closing the dialog. (#7915)
-				if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && this._.currentFocusIndex == widget.focusIndex )
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && this._.currentFocusIndex == widget.focusIndex )
 					widget.getInputElement().$.blur();
 
 				if ( widget.commit )
@@ -1855,7 +1855,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			}
 
 			// Calculate the offset between content and chrome size.
-			wrapperHeight = startSize.height - dialog.parts.contents.getSize( 'height', !( CKEDITOR.env.gecko || CKEDITOR.env.opera || CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks ) );
+			wrapperHeight = startSize.height - dialog.parts.contents.getSize( 'height', !( CKEDITOR.env.gecko || CKEDITOR.env.opera || CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks ) );
 			wrapperWidth = startSize.width - dialog.parts.contents.getSize( 'width', 1 );
 
 			origin = { x: $event.screenX, y: $event.screenY };
@@ -2404,7 +2404,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 							if ( elementDefinition && elementDefinition.padding != undefined )
 								styles.push( 'padding:' + cssLength( elementDefinition.padding ) );
 							// In IE Quirks alignment has to be done on table cells. (#7324)
-							if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks && children[ i ].align )
+							if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks && children[ i ].align )
 								styles.push( 'text-align:' + children[ i ].align );
 							if ( styles.length > 0 )
 								html.push( 'style="' + styles.join( '; ' ) + '" ' );
@@ -2481,7 +2481,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 							if ( elementDefinition && elementDefinition.padding != undefined )
 								styles.push( 'padding:' + cssLength( elementDefinition.padding ) );
 							// In IE Quirks alignment has to be done on table cells. (#7324)
-							if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 && CKEDITOR.env.quirks && children[ i ].align )
+							if ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 && CKEDITOR.env.quirks && children[ i ].align )
 								styles.push( 'text-align:' + children[ i ].align );
 							if ( styles.length > 0 )
 								html.push( 'style="', styles.join( '; ' ), '" ' );

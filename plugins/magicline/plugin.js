@@ -724,7 +724,7 @@
 
 			that.editor.focus();
 
-			if ( !( env.ie && env.version <= 10 ) && that.enterMode != CKEDITOR.ENTER_BR )
+			if ( !( env.ie && env.version < 11 ) && that.enterMode != CKEDITOR.ENTER_BR )
 				that.hotNode.scrollIntoView();
 
 			event.data.preventDefault( true );
@@ -751,7 +751,7 @@
 			accessNode;
 
 		// IE requires text node of &nbsp; in ENTER_BR mode.
-		if ( env.ie && env.version <= 10 && that.enterMode == CKEDITOR.ENTER_BR )
+		if ( env.ie && env.version < 11 && that.enterMode == CKEDITOR.ENTER_BR )
 			accessNode = that.doc.createText( WHITE_SPACE );
 
 		// In other cases a regular element is used.
@@ -846,7 +846,7 @@
 						that.lastCmdDirection = !!insertAfter;
 					} );
 
-					if ( !( env.ie && env.version <= 10 ) && that.enterMode != CKEDITOR.ENTER_BR )
+					if ( !( env.ie && env.version < 11 ) && that.enterMode != CKEDITOR.ENTER_BR )
 						that.hotNode.scrollIntoView();
 
 					// Detach the line if was visible (previously triggered by mouse).
@@ -1513,9 +1513,9 @@
 	function getSize( that, element, ignoreScroll, force ) {
 		var getStyle = (function() {
 			// Better "cache and reuse" than "call again and again".
-			var computed = ( env.ie && env.version <= 10 ) ? element.$.currentStyle : that.win.$.getComputedStyle( element.$, '' );
+			var computed = ( env.ie && env.version < 11 ) ? element.$.currentStyle : that.win.$.getComputedStyle( element.$, '' );
 
-				return ( env.ie && env.version <= 10 ) ?
+				return ( env.ie && env.version < 11 ) ?
 					function( propertyName ) {
 						return computed[ CKEDITOR.tools.cssStyleToDomStyle( propertyName ) ];
 					} : function( propertyName ) {

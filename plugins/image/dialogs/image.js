@@ -144,7 +144,7 @@
 					// Ratio button hc presentation - WHITE SQUARE / BLACK SQUARE
 					if ( CKEDITOR.env.hc ) {
 						var icon = ratioButton.getChild( 0 );
-						icon.setHtml( dialog.lockRatio ? ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '\u25A0' : '\u25A3' : ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? '\u25A1' : '\u25A2' );
+						icon.setHtml( dialog.lockRatio ? ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? '\u25A0' : '\u25A3' : ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? '\u25A1' : '\u25A2' );
 					}
 
 					return dialog.lockRatio;

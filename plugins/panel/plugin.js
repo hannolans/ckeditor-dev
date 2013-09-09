@@ -168,7 +168,7 @@
 				// trigger iframe's 'load' event.
 				var src =
 					CKEDITOR.env.air ? 'javascript:void(0)' :
-					( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 'javascript:void(function(){' + encodeURIComponent(
+					( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 'javascript:void(function(){' + encodeURIComponent(
 						'document.open();' +
 						// In IE, the document domain must be set any time we call document.open().
 						'(' + CKEDITOR.tools.fixDomain + ')();' +
@@ -219,7 +219,7 @@
 
 			// ARIA role works better in IE on the body element, while on the iframe
 			// for FF. (#8864)
-			var holder = !this.forceIFrame || ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? this._.holder : this.document.getById( this.id + '_frame' );
+			var holder = !this.forceIFrame || ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? this._.holder : this.document.getById( this.id + '_frame' );
 
 			if ( current ) {
 				// Clean up the current block's effects on holder.

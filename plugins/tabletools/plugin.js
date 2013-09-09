@@ -123,7 +123,7 @@
 			} else {
 				cell = new CKEDITOR.dom.element( cloneRow[ i ] ).clone();
 				cell.removeAttribute( 'rowSpan' );
-				!( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && cell.appendBogus();
+				!( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && cell.appendBogus();
 				newRow.append( cell );
 				cell = cell.$;
 			}
@@ -255,7 +255,7 @@
 			} else {
 				cell = new CKEDITOR.dom.element( cloneCol[ i ] ).clone();
 				cell.removeAttribute( 'colSpan' );
-				!( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) && cell.appendBogus();
+				!( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) && cell.appendBogus();
 				cell[ insertBefore ? 'insertBefore' : 'insertAfter' ].call( cell, new CKEDITOR.dom.element( cloneCol[ i ] ) );
 				cell = cell.$;
 			}
@@ -361,7 +361,7 @@
 
 		// Create the new cell element to be added.
 		var newCell = cell.clone();
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 			newCell.appendBogus();
 
 		if ( insertBefore )
@@ -525,7 +525,7 @@
 		if ( !isDetect ) {
 			frag.moveChildren( firstCell );
 
-			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+			if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 				firstCell.appendBogus();
 
 			if ( totalColSpan >= mapWidth )
@@ -611,7 +611,7 @@
 				cellsInSameRow[ i ].rowSpan++;
 		}
 
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 			newCell.appendBogus();
 
 		cell.$.rowSpan = newRowSpan;
@@ -651,7 +651,7 @@
 		}
 		newCell = cell.clone();
 		newCell.insertAfter( cell );
-		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) )
+		if ( !( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) )
 			newCell.appendBogus();
 
 		cell.$.colSpan = newColSpan;

@@ -93,7 +93,7 @@ CKEDITOR.plugins.add( 'contextmenu', {
 							this.open( offsetParent, null, offsetX, offsetY );
 
 							// IE needs a short while to allow selection change before opening menu. (#7908)
-						}, ( CKEDITOR.env.ie && CKEDITOR.env.version <= 10 ) ? 200 : 0, this );
+						}, ( CKEDITOR.env.ie && CKEDITOR.env.version < 11 ) ? 200 : 0, this );
 					}, this );
 
 					if ( CKEDITOR.env.opera ) {
