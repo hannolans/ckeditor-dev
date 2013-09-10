@@ -642,10 +642,6 @@ CKEDITOR.dom.range = function( root ) {
 						container = child;
 						offset = 0;
 					}
-
-					// Get the normalized offset.
-					if ( child && child.type == CKEDITOR.NODE_ELEMENT )
-						offset = child.getIndex( 1 );
 				}
 
 				// Normalize.
